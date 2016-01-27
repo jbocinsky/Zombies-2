@@ -1,0 +1,14 @@
+package firstgame.main;
+
+import javax.swing.JComponent;
+
+public class loginDisplay extends JPanel{
+
+	public loginDisplay(){
+	    super("Login Page");
+	    
+	    setSize(600, 400);
+	}
+
+	
+}

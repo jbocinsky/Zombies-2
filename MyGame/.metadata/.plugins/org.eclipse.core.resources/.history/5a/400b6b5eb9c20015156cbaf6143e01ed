@@ -1,0 +1,11 @@
+package firstgame.main;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+public class loginDisplay extends JComponent{
+
+
+    Jpanel display = new JPanel();
+	
+}

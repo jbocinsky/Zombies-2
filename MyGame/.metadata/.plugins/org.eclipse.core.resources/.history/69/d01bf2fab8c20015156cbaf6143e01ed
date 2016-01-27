@@ -1,0 +1,12 @@
+package firstgame.main;
+
+import javax.swing.JPanel;
+
+import practiceLogin.Jpanel;
+
+public class loginDisplay {
+
+
+    Jpanel display = new JPanel();
+	
+}

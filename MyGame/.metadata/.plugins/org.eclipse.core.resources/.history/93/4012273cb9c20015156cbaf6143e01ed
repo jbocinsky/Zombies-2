@@ -1,0 +1,12 @@
+package firstgame.main;
+
+import java.awt.Canvas;
+
+import javax.swing.JPanel;
+
+public class loginDisplay extends Canvas{
+
+
+    Jpanel display = new JPanel();
+	
+}

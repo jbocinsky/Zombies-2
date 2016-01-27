@@ -1,0 +1,47 @@
+package firstgame.main;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Scanner;
+
+public class Login {
+	
+	private Scanner scanner1 = new Scanner(new FileInputStream(""));
+	private Scanner scanner2 = new Scanner
+	
+	public Login(){
+		File file = new File("Login.txt");
+		file.createNewFile();
+		FileWriter writer = new FileWriter(file);
+		writer.write("This\n is\n an\n example\n");
+		FileReader fr = new FileReader(file); 
+	    char [] a = new char[50];
+	    fr.read(a); // reads the content to the array
+	    for(char c : a)
+	        System.out.print(c); //prints the characters one by one
+	    fr.close();
+
+	        this.scanner1=new Scanner(new FileInputStream("d:\\log.txt"));
+	        this.scanner2=new Scanner(System.in);
+	        boolean flag=false;
+	        String name,pword,n,p;
+	        System.out.println("Enter name:");
+	        n=s2.next();
+	        System.out.println("Enter password:");
+	        p=s2.next();
+	        while(s1.hasNext()) {
+	            name=s1.next();
+	            pword=s1.next();
+	            if(n.equals(name) && p.equals(pword)) {
+	                System.out.println("You are logged in.");
+	                flag=true;
+	                break;
+	            }                
+	        }
+	        if(!flag)
+	        System.out.println("Incorrect password.");
+	    }
+	}
+}

@@ -1,0 +1,44 @@
+/*package firstgame.main;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.swing.JPanel;
+
+public class Login{
+
+	   public static void main(String args[])throws IOException{
+	      File file = new File(".Hello1.txt");
+	      // creates the file
+	      if(!file.exists()){  //if file doesn't exist, create a newfile and write to it
+		      file.createNewFile();
+		      // creates a FileWriter Object
+		      FileWriter writer = new FileWriter(file); 
+		      // Writes the content to the file
+		      writer.write("This\n is\n an\n example\n"); 
+		      writer.flush();
+		      writer.close();
+	      }
+	      
+	      //Creates a FileReader Object
+	      FileReader fr = new FileReader(file); 
+	      char [] a = new char[50];
+	      fr.read(a); // reads the content to the array
+	      for(char c : a)
+	          System.out.print(c); //prints the characters one by one
+	      fr.close();
+	      
+	      System.out.println(file.exists()); // prints true if a file exists at that location
+	      System.out.println(file.getAbsoluteFile());// prints "c:\\eclipse\\eclipse.ini"
+	      
+	      // is file executable?
+	      //System.out.println(file.canExecute());
+	      // is file readable?
+	      //System.out.println(file.canRead());
+	      // is file writable?
+	      //System.out.println(file.canWrite());
+	   }
+	}
+*/
