@@ -19,17 +19,21 @@ public class Player extends GameObject {
 	private Game game;
 	private boolean L; //True if Left, False if Right
 	private long fireRate = 325;	// fireRate is in terms of milliseconds
-	private float fireRateLevel = 0;
+	private int fireRateLevel = 0;
 	private BulletController c;
 	private float damageDealer = 1;
 	private int speedLevel = 0;
 	private float speed = 5;
+	private int bombLevel;
 	
-	public Player(int x, int y, ID id, Game game, Handler handler, BulletController c) {
+	public Player(int x, int y, ID id, Game game, Handler handler, BulletController c, int fireRateLevel, int speedLevel, int bombLevel) {
 		super(x, y, id);
 		this.game = game;
 		this.handler = handler;
 		this.c = c;
+		this.fireRateLevel = fireRateLevel;
+		this.speedLevel = speedLevel;
+		this.bombLevel = bombLevel;
 		
 		if(this.game.difficulty == DIFFICULTY.Easy){
 			this.damageDealer = 1;
@@ -234,7 +238,7 @@ public class Player extends GameObject {
 	
 	public void deployBomb(){
 		Player player = this;
-		Bomb deployedBomb = new Bomb((int)player.x, (int) player.y, ID.Bomb, handler);
+		Bomb deployedBomb = new Bomb((int)player.x, (int) player.y, ID.Bomb, handler, bombLevel);
 		handler.addObject(deployedBomb);
 		deployedBomb.setBombDeployed(true);
 		--HUD.bombCount;

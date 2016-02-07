@@ -1,0 +1,95 @@
+package firstgame.main;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class DataBaseManager {
+
+	private String fileName = "GameDataBase.txt";
+	
+	public DataBaseManager(){
+		
+		/*			File file = new File(".gameDataBase.txt");
+		      // creates the file
+		      if(!file.exists()){  //if file doesn't exist, create a newfile and write to it
+			      file.createNewFile();
+			      // creates a FileWriter Object
+			      FileWriter writer = new FileWriter(file); 
+			      // Writes the content to the file
+			      writer.write("This\n is\n an\n example\n"); 
+			      writer.flush();
+			      writer.close();
+		      }
+*/
+		      
+		      //Creates a FileReader Object
+/*		      FileReader fr = new FileReader(file); 
+		      char [] a = new char[50];
+		      fr.read(a); // reads the content to the array
+		      for(char c : a)
+		          System.out.print(c); //prints the characters one by one
+		      fr.close();
+		      
+		      System.out.println(file.exists()); // prints true if a file exists at that location
+		      System.out.println(file.getAbsoluteFile());// prints "c:\\eclipse\\eclipse.ini"
+		      */
+		      // is file executable?
+		      //System.out.println(file.canExecute());
+		      // is file readable?
+		      //System.out.println(file.canRead());
+		      // is file writable?
+		      //System.out.println(file.canWrite());
+		}	
+	
+	public void createUser(String userName, String passWord){
+		Charset utf8 = StandardCharsets.UTF_8;
+		List<String> lines = Arrays.asList(userName, passWord,"0","0","0","0"); //places username, password, speed, health, fire rate, bombradius
+
+		try {
+		    Files.write(Paths.get(fileName), lines, utf8,StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	public boolean searchUserAndPass(String userName, String passWord) throws FileNotFoundException{
+		Scanner sc = new Scanner(new File(fileName));
+		boolean userNameCheck = false;
+		boolean passWordCheck = false;
+		int lineCount = 0;
+		
+		while(sc.hasNextLine()){
+			String line = sc.nextLine();
+			if(line.equals(userName)){
+				userNameCheck = true;
+			}
+			
+			System.out.println(line);
+		}
+		
+		sc.close();
+		
+//		FileReader fr = new FileReader(fileName); 
+//	      
+//	      fr.read(a); // reads the content to the array
+//	      for(char c : a)
+//	          System.out.print(c); //prints the characters one by one
+//	      fr.close();
+		if(true){
+			return true;
+		}
+		else
+			return false;
+	}
+	
+}
+

@@ -23,10 +23,10 @@ public class PauseMenu extends MouseAdapter {
 	boolean flag = false;
 	
 	//holds the cost of each upgrade, where each index represents the cost to obtain that level.
-	private int[] speedCosts = {0, 250, 500, 1000, 2000};
-	private int[] healthCosts= {0, 250, 500, 1000, 2000};
-	private int[] fireRateCosts = {0, 250, 500, 1000, 2000};
-	private int[] bombRadiusCosts = {0, 250, 500, 1000, 2000};
+	private int[] speedCosts = {250, 500, 1000, 2000, 4000};
+	private int[] healthCosts= {250, 500, 1000, 2000, 4000};
+	private int[] fireRateCosts = {250, 500, 1000, 2000, 4000};
+	private int[] bombRadiusCosts = {250, 500, 1000, 2000, 4000};
 	
 	public enum SELECTED{
 		None,
@@ -529,11 +529,11 @@ public class PauseMenu extends MouseAdapter {
 			g.setFont(textBox);
 			g.drawString("Upgrades your player's speed", 275, 180);
 			g.setFont(textBox2);
-			g.drawString("Level 1 costs: ", 315, 215);
-			g.drawString("Level 2 costs: ", 315, 255);
-			g.drawString("Level 3 costs: ", 315, 295);
-			g.drawString("Level 4 costs: ", 315, 335);
-			g.drawString("Level 5 costs: ", 315, 375);
+			g.drawString("Level 1 costs: " + speedCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + speedCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + speedCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + speedCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + speedCosts[4], 315, 375);
 			g.drawString("Your current Speed level is:  " + speed, 275, 420);
 	
 		}
@@ -542,11 +542,11 @@ public class PauseMenu extends MouseAdapter {
 			g.setFont(textBox);
 			g.drawString("Upgrades your maximum health", 275, 180);
 			g.setFont(textBox2);
-			g.drawString("Level 1 costs: ", 315, 215);
-			g.drawString("Level 2 costs: ", 315, 255);
-			g.drawString("Level 3 costs: ", 315, 295);
-			g.drawString("Level 4 costs: ", 315, 335);
-			g.drawString("Level 5 costs: ", 315, 375);
+			g.drawString("Level 1 costs: " + healthCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + healthCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + healthCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + healthCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + healthCosts[4], 315, 375);
 			g.drawString("Your current Health level is:  " + health, 275, 420);
 		}
 		else if(selected == SELECTED.FireRate){
@@ -554,11 +554,11 @@ public class PauseMenu extends MouseAdapter {
 			g.setFont(textBox);
 			g.drawString("Upgrades your gun's fire rate", 275, 180);
 			g.setFont(textBox2);
-			g.drawString("Level 1 costs: ", 315, 215);
-			g.drawString("Level 2 costs: ", 315, 255);
-			g.drawString("Level 3 costs: ", 315, 295);
-			g.drawString("Level 4 costs: ", 315, 335);
-			g.drawString("Level 5 costs: ", 315, 375);
+			g.drawString("Level 1 costs: " + fireRateCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + fireRateCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + fireRateCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + fireRateCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + fireRateCosts[4], 315, 375);
 			g.drawString("Your current Fire Rate level is:  " + fireRate, 275, 420);
 		}
 		else if(selected == SELECTED.BombRadius){
@@ -566,11 +566,11 @@ public class PauseMenu extends MouseAdapter {
 			g.setFont(textBox);
 			g.drawString("Upgrades your bomb's explosion radius", 275, 180);
 			g.setFont(textBox2);
-			g.drawString("Level 1 costs: ", 315, 215);
-			g.drawString("Level 2 costs: ", 315, 255);
-			g.drawString("Level 3 costs: ", 315, 295);
-			g.drawString("Level 4 costs: ", 315, 335);
-			g.drawString("Level 5 costs: ", 315, 375);
+			g.drawString("Level 1 costs: " + bombRadiusCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + bombRadiusCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + bombRadiusCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + bombRadiusCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + bombRadiusCosts[4], 315, 375);
 			g.drawString("Your current Bomb Radius level is:  " + bombRadius, 275, 420);
 		}
 		
@@ -579,77 +579,98 @@ public class PauseMenu extends MouseAdapter {
 			g.setColor(Color.red);
 			g.setFont(textBox);
 			if(selectedSpeed != 0){
+				g.drawString("Purchase", 733, 137);
+				g.drawRect(715, 150, 125, 50);
+				g.drawRect(714, 149, 127, 52);
+				
 				if(selectedSpeed == 1){
-					g.drawString("Cost: ", 720, 180);
+					g.drawString("Cost: " + speedCosts[0], 720, 180);
 				}
 				else if(selectedSpeed == 2){
-					g.drawString("Cost: ", 720, 180);
+					g.drawString("Cost: " + speedCosts[1], 720, 180);
 				}
 				else if(selectedSpeed == 3){
-					g.drawString("Cost: ", 720, 180);
+					g.drawString("Cost: " + speedCosts[2], 720, 180);
 				}
 				else if(selectedSpeed == 4){
-					g.drawString("Cost: ", 720, 180);
+					g.drawString("Cost: " + speedCosts[3], 720, 180);
 				}
 				else if(selectedSpeed == 5){
-					g.drawString("Cost: ", 720, 180);
+					g.drawString("Cost: " + speedCosts[4], 720, 180);
 				}
 			}
 			else if(selectedHealth != 0){
+				g.drawString("Purchase", 733, 217);
+				g.drawRect(715, 230, 125, 50);
+				g.drawRect(714, 229, 127, 52);
+				
 				if(selectedHealth == 1){
-					g.drawString("Cost: ", 720, 265);
+					g.drawString("Cost: " + healthCosts[0], 720, 265);
 				}
 				else if(selectedHealth == 2){
-					g.drawString("Cost: ", 720, 265);
+					g.drawString("Cost: " + healthCosts[1], 720, 265);
 				}
 				else if(selectedHealth == 3){
-					g.drawString("Cost: ", 720, 265);
+					g.drawString("Cost: " + healthCosts[2], 720, 265);
 				}
 				else if(selectedHealth == 4){
-					g.drawString("Cost: ", 720, 265);
+					g.drawString("Cost: " + healthCosts[3], 720, 265);
 				}
 				else if(selectedHealth == 5){
-					g.drawString("Cost: ", 720, 265);
+					g.drawString("Cost: " + healthCosts[4], 720, 265);
 				}
 			}
-			else if(selectedFireRate != 0){
+			else if(selectedFireRate != 0){	
+				
+				g.drawString("Purchase", 733, 297);
+				g.drawRect(715, 310, 125, 50);
+				g.drawRect(714, 309, 127, 52);
+				
 				if(selectedFireRate == 1){
-					g.drawString("Cost: ", 720, 345);
+					g.drawString("Cost: " + fireRateCosts[0], 720, 345);
 				}
 				else if(selectedFireRate == 2){
-					g.drawString("Cost: ", 720, 345);
+					g.drawString("Cost: " + fireRateCosts[1], 720, 345);
 				}
 				else if(selectedFireRate == 3){
-					g.drawString("Cost: ", 720, 345);
+					g.drawString("Cost: " + fireRateCosts[2], 720, 345);
 				}
 				else if(selectedFireRate == 4){
-					g.drawString("Cost: ", 720, 345);
+					g.drawString("Cost: " + fireRateCosts[3], 720, 345);
 				}
 				else if(selectedFireRate == 5){
-					g.drawString("Cost: ", 720, 345);
+					g.drawString("Cost: " + fireRateCosts[4], 720, 345);
 				}
 			}
 			else if(selectedBombRadius != 0){
+				
+				//purchase box changes color from red to green if you have enough coins
+				g.drawString("Purchase", 733, 377);
+				g.drawRect(715, 390, 125, 50);
+				g.drawRect(714, 389, 127, 52);
+				
 				if(selectedBombRadius == 1){
-					g.drawString("Cost: ", 720, 420);
+					g.drawString("Cost: " + bombRadiusCosts[0], 720, 420);
 				}
 				else if(selectedBombRadius == 2){
-					g.drawString("Cost: ", 720, 420);
+					g.drawString("Cost: " + bombRadiusCosts[1], 720, 420);
 				}
 				else if(selectedBombRadius == 3){
-					g.drawString("Cost: ", 720, 420);
+					g.drawString("Cost: " + bombRadiusCosts[2], 720, 420);
 				}
 				else if(selectedBombRadius == 4){
-					g.drawString("Cost: ", 720, 420);
+					g.drawString("Cost: " + bombRadiusCosts[3], 720, 420);
 				}
 				else if(selectedBombRadius == 5){
-					g.drawString("Cost: ", 720, 420);
+					g.drawString("Cost: " + bombRadiusCosts[4], 720, 420);
 				}
 			}
 			
 			
 			
 		}
+		
+		
 		
 		if(selected != SELECTED.None){
 			g.setColor(Color.blue);

@@ -1,0 +1,665 @@
+package firstgame.main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+
+public class PauseMenu extends MouseAdapter {
+
+	private Game game;
+	private int speed = 0;
+	private int health = 0;
+	private int fireRate = 0;
+	private int bombRadius = 0;
+	
+	//used to display what is selected
+	private int selectedSpeed = 0;
+	private int selectedHealth = 0;
+	private int selectedFireRate = 0;
+	private int selectedBombRadius = 0;
+	boolean flag = false;
+	
+	//holds the cost of each upgrade, where each index represents the cost to obtain that level.
+	private int[] speedCosts = {250, 500, 1000, 2000, 4000};
+	private int[] healthCosts= {250, 500, 1000, 2000, 4000};
+	private int[] fireRateCosts = {250, 500, 1000, 2000, 4000};
+	private int[] bombRadiusCosts = {250, 500, 1000, 2000, 4000};
+	
+	public enum SELECTED{
+		None,
+		Speed,
+		Health,
+		FireRate,
+		BombRadius,
+	};
+
+	public SELECTED selected = SELECTED.None; // sets default/original difficulty to easy
+	
+	
+	public PauseMenu(Game game){
+		this.game = game;
+	}
+	
+	public void mousePressed(MouseEvent e){
+		
+		int mx = e.getX(); // x location of mouse
+		int my = e.getY(); // y location of mouse
+		
+		//Speed box
+		if(mouseOver(mx, my, 9, 149, 182, 52)){
+			selected = SELECTED.Speed;
+		}
+		//Health box
+		else if(mouseOver(mx, my, 9, 229, 182, 52)){
+			selected = SELECTED.Health;
+		}
+		//FireRate box
+		else if(mouseOver(mx, my, 9, 309, 182, 52)){
+			selected = SELECTED.FireRate;
+		}
+		//BombRadius box
+		else if(mouseOver(mx, my, 9, 389, 182, 52)){
+			selected = SELECTED.BombRadius;
+		}
+		else{
+			selected = SELECTED.None;
+		}
+		
+		boolean flag1 = false;
+		boolean flag2 = false;
+		boolean flag3 = false;
+		boolean flag4 = false;
+		
+		//Speed Row boxes
+		//first box
+		if(mouseOver(mx, my, 239, 149, 52, 52)){
+			selectedSpeed = 1;
+			flag1 = true;
+		}
+		//second box
+		else if(mouseOver(mx, my, 334, 149, 52, 52)){
+			selectedSpeed = 2;
+			flag1 = true;
+		}
+		//third box
+		else if(mouseOver(mx, my, 429, 149, 52, 52)){
+			selectedSpeed = 3;
+			flag1 = true;
+		}
+		//fourth box
+		else if(mouseOver(mx, my, 524, 149, 52, 52)){
+			selectedSpeed = 4;
+			flag1 = true;
+		}
+		//fifth box
+		else if(mouseOver(mx, my, 619, 149, 52, 52)){
+			selectedSpeed = 5;
+			flag1 = true;
+		}
+		if(flag1 != true){
+			selectedSpeed = 0;
+		}
+		
+		//Health Row boxes
+		//first box
+		if(mouseOver(mx, my, 239, 229, 52, 52)){
+			selectedHealth = 1;
+			flag2 = true;
+		}
+		//second box
+		else if(mouseOver(mx, my, 334, 229, 52, 52)){
+			selectedHealth = 2;
+			flag2 = true;
+		}
+		//third box
+		else if(mouseOver(mx, my, 429, 229, 52, 52)){
+			selectedHealth = 3;
+			flag2 = true;
+		}
+		//fourth box
+		else if(mouseOver(mx, my, 524, 229, 52, 52)){
+			selectedHealth = 4;
+			flag2 = true;
+		}
+		//fifth box
+		else if(mouseOver(mx, my, 619, 229, 52, 52)){
+			selectedHealth = 5;
+			flag2 = true;
+		}
+		if(flag2 != true){
+			selectedHealth = 0;
+		}
+		
+		//Fire Rate row boxes
+		//first box
+		if(mouseOver(mx, my, 239, 309, 52, 52)){
+			selectedFireRate = 1;
+			flag3 = true;
+		}
+		//second box
+		else if(mouseOver(mx, my, 334, 309, 52, 52)){
+			selectedFireRate = 2;
+			flag3 = true;
+		}
+		//third box
+		else if(mouseOver(mx, my, 429, 309, 52, 52)){
+			selectedFireRate = 3;
+			flag3 = true;
+		}
+		//fourth box
+		else if(mouseOver(mx, my, 524, 309, 52, 52)){
+			selectedFireRate = 4;
+			flag3 = true;
+		}
+		//fifth box
+		else if(mouseOver(mx, my, 619, 309, 52, 52)){
+			selectedFireRate = 5;
+			flag3 = true;
+		}
+		if(flag3 != true){
+			selectedFireRate = 0;
+		}
+		
+		//Bomb Radius Row boxes
+		//first box
+		if(mouseOver(mx, my, 239, 389, 52, 52)){
+			selectedBombRadius = 1;
+			flag4 = true;
+		}
+		//second box
+		else if(mouseOver(mx, my, 334, 389, 52, 52)){
+			selectedBombRadius = 2;
+			flag4 = true;
+		}
+		//third box
+		else if(mouseOver(mx, my, 429, 389, 52, 52)){
+			selectedBombRadius = 3;
+			flag4 = true;
+		}
+		//fourth box
+		else if(mouseOver(mx, my, 524, 389, 52, 52)){
+			selectedBombRadius = 4;
+			flag4 = true;
+		}
+		//fifth box
+		else if(mouseOver(mx, my, 619, 389, 52, 52)){
+			selectedBombRadius = 5;
+			flag4 = true;
+		}
+		if(flag4 != true){
+			selectedBombRadius = 0;
+		}
+	}
+	
+	private boolean mouseOver(int mx, int my, int x, int y, int width, int height){
+		if(mx > x && mx < x + width){
+			if(my > y && my < y + height){
+				return true;
+			}else return false;
+		}else return false;
+	}
+	
+	public void tick(){
+	}
+	
+	public void render(Graphics g){
+		
+		Font fnt = new Font("arial", 1, 75);
+		Font button = new Font("arial", 1, 50);
+		Font numbers = new Font("arial", 1, 30);
+		Font title = new Font("arial", 1, 25);
+		Font textBox = new Font("arial", 1, 20);
+		Font textBox2 = new Font("arial", 1, 17);
+			
+		g.setFont(fnt);
+		g.setColor(Color.white);
+		g.drawString("Upgrades", 280, 80);
+		g.fillRect(252, 92, 400, 4);
+		
+		g.setColor(Color.blue);
+		g.setFont(button);
+		g.drawRect(300, 500, 300, 100); // button dimensions for Resume
+		g.drawString("Resume", 352, 565);
+			
+		
+		//speed
+		//First Row Upgrade
+		g.drawRect(10,150,180,50);
+		g.drawRect(9,149,182,52);
+		g.setFont(title);
+		g.drawString("Speed", 62, 185);
+			
+		//Health
+		//Second Row Upgrade
+		g.drawRect(10,230,180,50);
+		g.drawRect(9,229,182,52);
+		g.setFont(title);
+		g.drawString("Health", 62, 265);
+		
+		//Fire Rate
+		//Third Row Upgrade
+		g.drawRect(10,310,180,50);
+		g.drawRect(9,309,182,52);
+		g.setFont(title);
+		g.drawString("Fire Rate", 45, 345);
+			
+		//Bomb Radius
+		//Fourth Row Upgrade
+		g.drawRect(10,390,180,50);
+		g.drawRect(9,389,182,52);
+		g.setFont(title);
+		g.drawString("Bomb Radius", 18, 425);
+			
+	
+		if(selected == SELECTED.None){
+			// Upgrade Graphics below
+			
+			g.setFont(numbers);
+			g.drawString("1", 257, 140);
+			g.drawString("2", 352, 140);
+			g.drawString("3", 447, 140);
+			g.drawString("4", 540, 140);
+			g.drawString("5", 637, 140);
+			
+			//first row speed
+			//first box
+			g.drawRect(240, 150, 50, 50);
+			g.drawRect(239, 149, 52, 52);
+			g.setColor(Color.lightGray);
+			//body
+			g.fillRect(220+40, 150+25, 13, 24);
+			g.fillOval(220+41, 150+15, 10, 10);
+			// Left Arm
+			g.setColor(Color.darkGray);
+			g.fillRect(220+42, 150+27, 2, 10);
+			g.fillRect(220+40, 150+35, 2, 2);
+			// Right Arm
+			g.fillRect(220+48, 150+27, 2, 10);
+			g.fillRect(220+50, 150+35, 3, 2);
+			// Legs
+			g.fillRect(220+45, 150+39, 2, 10);
+			g.setColor(Color.black);
+			g.fillRect(220+40, 150+37, 1, 13);
+			g.fillRect(220+52, 150+37, 2, 13);
+			//lines behind
+			g.setColor(Color.lightGray);
+			g.fillRect(240+10, 150+27, 5, 2);
+			g.fillRect(240+5, 150+33, 10, 2);		
+			
+			//second box
+			g.setColor(Color.blue);
+			g.drawRect(335, 150, 50, 50);
+			g.drawRect(334, 149, 52, 52);
+			g.setColor(Color.lightGray);
+			//body
+			g.fillRect(320+40, 150+25, 13, 24);
+			g.fillOval(320+41, 150+15, 10, 10);
+			// Left Arm
+			g.setColor(Color.darkGray);
+			g.fillRect(320+42, 150+27, 2, 10);
+			g.fillRect(320+40, 150+35, 2, 2);
+			// Right Arm
+			g.fillRect(320+48, 150+27, 2, 10);
+			g.fillRect(320+50, 150+35, 3, 2);
+			// Legs
+			g.fillRect(320+45, 150+39, 2, 10);
+			g.setColor(Color.black);
+			g.fillRect(320+40, 150+37, 1, 13);
+			g.fillRect(320+52, 150+37, 2, 13);
+			//lines behind
+			g.setColor(Color.lightGray);
+			g.fillRect(335+11, 150+27, 9, 2);
+			g.fillRect(335+5, 150+33, 15, 2);
+			
+			//third box
+			g.setColor(Color.blue);
+			g.drawRect(430, 150, 50, 50);
+			g.drawRect(429, 149, 52, 52);
+			g.setColor(Color.lightGray);
+			//body
+			g.fillRect(418+40, 150+25, 13, 24);
+			g.fillOval(418+41, 150+15, 10, 10);
+			// Left Arm
+			g.setColor(Color.darkGray);
+			g.fillRect(418+42, 150+27, 2, 10);
+			g.fillRect(418+40, 150+35, 2, 2);
+			// Right Arm
+			g.fillRect(418+48, 150+27, 2, 10);
+			g.fillRect(418+50, 150+35, 3, 2);
+			// Legs
+			g.fillRect(418+45, 150+39, 2, 10);
+			g.setColor(Color.black);
+			g.fillRect(418+40, 150+37, 1, 13);
+			g.fillRect(418+52, 150+37, 2, 13);
+			//lines behind
+			g.setColor(Color.lightGray);
+			g.fillRect(430+10, 150+27, 13, 2);
+			g.fillRect(430+5, 150+34, 18, 2);
+			g.fillRect(430+10, 150+41, 13, 2);
+			
+			//fourth box
+			g.setColor(Color.blue);
+			g.drawRect(525, 150, 50, 50);
+			g.drawRect(524, 149, 52, 52);
+			g.setColor(Color.lightGray);
+			//body
+			g.fillRect(515+40, 150+25, 13, 24);
+			g.fillOval(515+41, 150+15, 10, 10);
+			// Left Arm
+			g.setColor(Color.darkGray);
+			g.fillRect(515+42, 150+27, 2, 10);
+			g.fillRect(515+40, 150+35, 2, 2);
+			// Right Arm
+			g.fillRect(515+48, 150+27, 2, 10);
+			g.fillRect(515+50, 150+35, 3, 2);
+			// Legs
+			g.fillRect(515+45, 150+39, 2, 10);
+			g.setColor(Color.black);
+			g.fillRect(515+40, 150+37, 1, 13);
+			g.fillRect(515+52, 150+37, 2, 13);
+			//lines behind
+			g.setColor(Color.lightGray);
+			g.fillRect(525+15, 150+24, 12, 2);
+			g.fillRect(525+7, 150+30, 20, 2);
+			g.fillRect(525+7, 150+36, 20, 2);
+			g.fillRect(525+15, 150+42, 12, 2);
+			
+			//fifth box
+			g.setColor(Color.blue);
+			g.drawRect(620, 150, 50, 50);
+			g.drawRect(619, 149, 52, 52);
+			g.setColor(Color.lightGray);
+			//body
+			g.fillRect(615+40, 150+25, 13, 24);
+			g.fillOval(615+41, 150+15, 10, 10);
+			// Left Arm
+			g.setColor(Color.darkGray);
+			g.fillRect(615+42, 150+27, 2, 10);
+			g.fillRect(615+40, 150+35, 2, 2);
+			// Right Arm
+			g.fillRect(615+48, 150+27, 2, 10);
+			g.fillRect(615+50, 150+35, 3, 2);
+			// Legs
+			g.fillRect(615+45, 150+39, 2, 10);
+			g.setColor(Color.black);
+			g.fillRect(615+40, 150+37, 1, 13);
+			g.fillRect(615+52, 150+37, 2, 13);
+			//lines behind
+			g.setColor(Color.lightGray);
+			g.fillRect(620+20, 150+20, 10, 2);
+			g.fillRect(620+13, 150+26, 17, 2);
+			g.fillRect(620+5, 150+32, 25, 2);
+			g.fillRect(620+13, 150+38, 17, 2);
+			g.fillRect(620+20, 150+44, 10, 2);
+					
+			//second row Health
+			//first box
+			g.setColor(Color.blue);
+			g.drawRect(240, 230, 50, 50);
+			g.drawRect(239, 229, 52, 52);
+			g.setColor(new Color(75,170,0)); //green
+			g.fillRect(241, 270, 49, 10);
+			
+			//second box
+			g.setColor(Color.blue);
+			g.drawRect(335, 230, 50, 50);
+			g.drawRect(334, 229, 52, 52);
+			g.setColor(new Color(75,170,0)); //green
+			g.fillRect(336, 260, 49, 20);
+			
+			//third box
+			g.setColor(Color.blue);
+			g.drawRect(430, 230, 50, 50);
+			g.drawRect(429, 229, 52, 52);
+			g.setColor(new Color(75,170,0)); //green
+			g.fillRect(431, 252, 49, 28);
+			
+			//fourth box
+			g.setColor(Color.blue);
+			g.drawRect(525, 230, 50, 50);
+			g.drawRect(524, 229, 52, 52);
+			g.setColor(new Color(75,170,0)); //green
+			g.fillRect(526, 242, 49, 38);
+			
+			//fifth box
+			g.setColor(Color.blue);
+			g.drawRect(620, 230, 50, 50);
+			g.drawRect(619, 229, 52, 52);
+			g.setColor(new Color(75,170,0)); //green
+			g.fillRect(621, 231, 49, 49);
+			
+			
+			//third row fireRate
+			//first box
+			g.setColor(Color.blue);
+			g.drawRect(240, 310, 50, 50);
+			g.drawRect(239, 309, 52, 52);
+			g.fillRect(240+5, 310+27, 3, 5);
+			g.fillRect(240+2, 310+24, 12, 3);
+			g.setColor(Color.gray);
+			g.fillRect(240+30, 310+24, 5, 5);
+			
+			//second box
+			g.setColor(Color.blue);
+			g.drawRect(335, 310, 50, 50);
+			g.drawRect(334, 309, 52, 52);
+			g.fillRect(335+5, 310+27, 3, 5);
+			g.fillRect(335+2, 310+24, 12, 3);
+			g.setColor(Color.gray);
+			g.fillRect(335+22, 310+24, 5, 5);
+			g.fillRect(335+37, 310+24, 5, 5);
+			
+			//third box
+			g.setColor(Color.blue);
+			g.drawRect(430, 310, 50, 50);
+			g.drawRect(429, 309, 52, 52);
+			g.fillRect(430+5, 310+27, 3, 5);
+			g.fillRect(430+2, 310+24, 12, 3);
+			g.setColor(Color.gray);
+			g.fillRect(430+20, 310+24, 5, 5);
+			g.fillRect(430+40, 310+20, 5, 5);
+			g.fillRect(430+40, 310+28, 5, 5);
+			
+			//fourth box
+			g.setColor(Color.blue);
+			g.drawRect(525, 310, 50, 50);
+			g.drawRect(524, 309, 52, 52);
+			g.fillRect(525+5, 310+27, 3, 5);
+			g.fillRect(525+2, 310+24, 12, 3);
+			g.setColor(Color.gray);
+			g.fillRect(525+18, 310+24, 5, 5);
+			g.fillRect(525+29, 310+20, 5, 5);
+			g.fillRect(525+29, 310+28, 5, 5);
+			g.fillRect(525+40, 310+16, 5, 5);
+			g.fillRect(525+40, 310+32, 5, 5);
+			
+			//fifth box
+			g.setColor(Color.blue);
+			g.drawRect(620, 310, 50, 50);
+			g.drawRect(619, 309, 52, 52);
+			g.fillRect(620+5, 310+27, 3, 5);
+			g.fillRect(620+2, 310+24, 12, 3);
+			g.setColor(Color.gray);
+			g.fillRect(620+18, 310+24, 5, 5);
+			g.fillRect(620+30, 310+20, 5, 5);
+			g.fillRect(620+30, 310+28, 5, 5);
+			g.fillRect(620+42, 310+16, 5, 5);
+			g.fillRect(620+42, 310+32, 5, 5);
+			g.fillRect(620+42, 310+24, 5, 5);		
+				
+			
+			//Fourth Row Bomb Radius
+			//first box
+			g.setColor(Color.blue);
+			g.drawRect(240, 390, 50, 50);
+			g.drawRect(239, 389, 52, 52);
+			g.drawOval(260, 410, 10, 10);
+			g.drawOval(259, 409, 12, 12);
+			
+			//second box
+			g.drawRect(335, 390, 50, 50);
+			g.drawRect(334, 389, 52, 52);
+			g.drawOval(353, 408, 13, 13);
+			g.drawOval(352, 407, 15, 15);
+			
+			//third box
+			g.drawRect(430, 390, 50, 50);
+			g.drawRect(429, 389, 52, 52);
+			g.drawOval(446, 406, 18, 18);
+			g.drawOval(445, 405, 20, 20);
+		
+			//fourth box
+			g.drawRect(525, 390, 50, 50);
+			g.drawRect(524, 389, 52, 52);
+			g.drawOval(539, 404, 22, 22);
+			g.drawOval(538, 403, 24, 24);
+			
+			//fifth box
+			g.drawRect(620, 390, 50, 50);
+			g.drawRect(619, 389, 52, 52);
+			g.drawOval(631, 401, 28, 28);
+			g.drawOval(630, 400, 30, 30);
+			
+		}
+		else if(selected == SELECTED.Speed){
+			g.setColor(Color.white);
+			g.setFont(textBox);
+			g.drawString("Upgrades your player's speed", 275, 180);
+			g.setFont(textBox2);
+			g.drawString("Level 1 costs: " + speedCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + speedCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + speedCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + speedCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + speedCosts[4], 315, 375);
+			g.drawString("Your current Speed level is:  " + speed, 275, 420);
+	
+		}
+		else if(selected == SELECTED.Health){
+			g.setColor(Color.white);
+			g.setFont(textBox);
+			g.drawString("Upgrades your maximum health", 275, 180);
+			g.setFont(textBox2);
+			g.drawString("Level 1 costs: " + healthCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + healthCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + healthCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + healthCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + healthCosts[4], 315, 375);
+			g.drawString("Your current Health level is:  " + health, 275, 420);
+		}
+		else if(selected == SELECTED.FireRate){
+			g.setColor(Color.white);
+			g.setFont(textBox);
+			g.drawString("Upgrades your gun's fire rate", 275, 180);
+			g.setFont(textBox2);
+			g.drawString("Level 1 costs: " + fireRateCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + fireRateCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + fireRateCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + fireRateCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + fireRateCosts[4], 315, 375);
+			g.drawString("Your current Fire Rate level is:  " + fireRate, 275, 420);
+		}
+		else if(selected == SELECTED.BombRadius){
+			g.setColor(Color.white);
+			g.setFont(textBox);
+			g.drawString("Upgrades your bomb's explosion radius", 275, 180);
+			g.setFont(textBox2);
+			g.drawString("Level 1 costs: " + bombRadiusCosts[0], 315, 215);
+			g.drawString("Level 2 costs: " + bombRadiusCosts[1], 315, 255);
+			g.drawString("Level 3 costs: " + bombRadiusCosts[2], 315, 295);
+			g.drawString("Level 4 costs: " + bombRadiusCosts[3], 315, 335);
+			g.drawString("Level 5 costs: " + bombRadiusCosts[4], 315, 375);
+			g.drawString("Your current Bomb Radius level is:  " + bombRadius, 275, 420);
+		}
+		
+		//The below code is Responsible for determining if a small box is selected, and if so, which one
+		if(selectedSpeed != 0 || selectedHealth != 0 || selectedFireRate != 0 || selectedBombRadius != 0){
+			g.setColor(Color.red);
+			g.setFont(textBox);
+			if(selectedSpeed != 0){
+				g.drawRect(300, 149, 150, 50);
+				g.drawRect(299, 150, 152, 52);
+				
+				if(selectedSpeed == 1){
+					g.drawString("Cost: " + speedCosts[0], 720, 180);
+				}
+				else if(selectedSpeed == 2){
+					g.drawString("Cost: " + speedCosts[1], 720, 180);
+				}
+				else if(selectedSpeed == 3){
+					g.drawString("Cost: " + speedCosts[2], 720, 180);
+				}
+				else if(selectedSpeed == 4){
+					g.drawString("Cost: " + speedCosts[3], 720, 180);
+				}
+				else if(selectedSpeed == 5){
+					g.drawString("Cost: " + speedCosts[4], 720, 180);
+				}
+			}
+			else if(selectedHealth != 0){
+				if(selectedHealth == 1){
+					g.drawString("Cost: " + healthCosts[0], 720, 265);
+				}
+				else if(selectedHealth == 2){
+					g.drawString("Cost: " + healthCosts[1], 720, 265);
+				}
+				else if(selectedHealth == 3){
+					g.drawString("Cost: " + healthCosts[2], 720, 265);
+				}
+				else if(selectedHealth == 4){
+					g.drawString("Cost: " + healthCosts[3], 720, 265);
+				}
+				else if(selectedHealth == 5){
+					g.drawString("Cost: " + healthCosts[4], 720, 265);
+				}
+			}
+			else if(selectedFireRate != 0){				
+				if(selectedFireRate == 1){
+					g.drawString("Cost: " + fireRateCosts[0], 720, 345);
+				}
+				else if(selectedFireRate == 2){
+					g.drawString("Cost: " + fireRateCosts[1], 720, 345);
+				}
+				else if(selectedFireRate == 3){
+					g.drawString("Cost: " + fireRateCosts[2], 720, 345);
+				}
+				else if(selectedFireRate == 4){
+					g.drawString("Cost: " + fireRateCosts[3], 720, 345);
+				}
+				else if(selectedFireRate == 5){
+					g.drawString("Cost: " + fireRateCosts[4], 720, 345);
+				}
+			}
+			else if(selectedBombRadius != 0){
+				if(selectedBombRadius == 1){
+					g.drawString("Cost: " + bombRadiusCosts[0], 720, 420);
+				}
+				else if(selectedBombRadius == 2){
+					g.drawString("Cost: " + bombRadiusCosts[1], 720, 420);
+				}
+				else if(selectedBombRadius == 3){
+					g.drawString("Cost: " + bombRadiusCosts[2], 720, 420);
+				}
+				else if(selectedBombRadius == 4){
+					g.drawString("Cost: " + bombRadiusCosts[3], 720, 420);
+				}
+				else if(selectedBombRadius == 5){
+					g.drawString("Cost: " + bombRadiusCosts[4], 720, 420);
+				}
+			}
+			
+			
+			
+		}
+		
+		
+		
+		if(selected != SELECTED.None){
+			g.setColor(Color.blue);
+			g.drawRect(240, 150, 430, 290);
+			g.drawRect(239, 149, 432, 292);
+		}
+	}
+}

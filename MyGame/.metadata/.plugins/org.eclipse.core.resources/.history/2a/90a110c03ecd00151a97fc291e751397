@@ -1,0 +1,70 @@
+package firstgame.main;
+
+import java.awt.List;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+
+public class DataBaseManager {
+
+	public DataBaseManager() throws UnsupportedEncodingException, FileNotFoundException, IOException{
+		Charset utf8 = StandardCharsets.UTF_8;
+		List lines = (List) Arrays.asList("1st line", "2nd line");
+		byte[] data = {1, 2, 3, 4, 5};
+
+		try {
+		    Files.write(Paths.get("file1.bin"), data);
+		    Files.write(Paths.get("file2.bin"), data,
+		            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		    Files.write(Paths.get("file3.txt"), "content".getBytes());
+		    Files.write(Paths.get("file4.txt"), "content".getBytes(utf8));
+		    Files.write(Paths.get("file5.txt"), lines, utf8);
+		    Files.write(Paths.get("file6.txt"), lines, utf8,
+		            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		
+		/*			File file = new File(".gameDataBase.txt");
+		      // creates the file
+		      if(!file.exists()){  //if file doesn't exist, create a newfile and write to it
+			      file.createNewFile();
+			      // creates a FileWriter Object
+			      FileWriter writer = new FileWriter(file); 
+			      // Writes the content to the file
+			      writer.write("This\n is\n an\n example\n"); 
+			      writer.flush();
+			      writer.close();
+		      }
+*/
+/*		      try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+		              new FileOutputStream("filename.txt"), "utf-8"))) {
+		    	  writer.write("something");
+		      }*/
+		      
+		      //Creates a FileReader Object
+/*		      FileReader fr = new FileReader(file); 
+		      char [] a = new char[50];
+		      fr.read(a); // reads the content to the array
+		      for(char c : a)
+		          System.out.print(c); //prints the characters one by one
+		      fr.close();
+		      
+		      System.out.println(file.exists()); // prints true if a file exists at that location
+		      System.out.println(file.getAbsoluteFile());// prints "c:\\eclipse\\eclipse.ini"
+		      */
+		      // is file executable?
+		      //System.out.println(file.canExecute());
+		      // is file readable?
+		      //System.out.println(file.canRead());
+		      // is file writable?
+		      //System.out.println(file.canWrite());
+		}	
+	}
+

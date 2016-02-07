@@ -1,0 +1,16 @@
+package firstgame.main;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+public class NewPlayerSignUp extends JFrame{
+	private JTextField userNameField;
+	private JPasswordField passWordField;
+	private JLabel un;
+	private JLabel pw;
+	private JButton confirmButton;
+	private JButton cancelButton;
+}

@@ -2,8 +2,20 @@ package firstgame.main;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.JFrame;
 
 public class Game extends Canvas implements Runnable{
 
@@ -22,6 +34,13 @@ public class Game extends Canvas implements Runnable{
 	private Menu menu;
 	private PauseMenu pauseMenu;
 	private KeyInput keyInput;
+	private static String fileName = "GameDataBase.txt";
+	private String userName = "";
+	private String passWord = "";
+	private int speedLevel = 0;
+	private int healthLevel = 0;
+	private int fireRateLevel = 0;
+	private int bombLevel = 0;
 	
 	public enum STATE{
 		Login,
@@ -44,28 +63,27 @@ public class Game extends Canvas implements Runnable{
 
 	public DIFFICULTY difficulty = DIFFICULTY.Easy; // sets difficulty difficulty to easy
 	
-	public Game(){
+	public Game(String userName, String passWord, int speedLevel, int healthLevel, int fireRateLevel, int bombLevel){
 		
 		handler = new Handler(this); // initiates our handler that handles game objects
 		bulletCtrl = new BulletController(); // initiates the bullet controller that handles creating and removing bullets
-		player = new Player(WIDTH/2-32, HEIGHT/2-32,ID.Player, this, handler, bulletCtrl);	
-		hud = new HUD(this);  // initiates Heads up display in game
+		player = new Player(WIDTH/2-32, HEIGHT/2-32,ID.Player, this, handler, bulletCtrl, fireRateLevel, speedLevel, bombLevel);	
+		hud = new HUD(this, healthLevel);  // initiates Heads up display in game
 		
 		keyInput = new KeyInput(this, handler, player);
 		this.addKeyListener(keyInput);  // handles and listens for key input
 		
-		menu = new Menu(this, handler, player, hud, bulletCtrl);
+		menu = new Menu(this, handler, player, hud, bulletCtrl, bombLevel);
 		this.addMouseListener(menu);
 		
 		pauseMenu = new PauseMenu(this);
 		this.addMouseListener(pauseMenu);
-	
 		
 		new Window(WIDTH, HEIGHT, "Zombies^2", this);  // creates window to view game
 
-		spawner = new Spawn(this, handler, hud, player);  // initiates spawner in game
+		spawner = new Spawn(this, handler, hud, player, bombLevel);  // initiates spawner in game
 		
-	}
+	}	
 	
 	public synchronized void start(){
 		thread = new Thread(this);
@@ -104,7 +122,7 @@ public class Game extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				System.out.println("FPS: " + frames);
+				//System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}
@@ -193,8 +211,31 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public static void main(String args[]){
-
-		new Game();
-		new LoginDisplay();
-	}	
+		//creates database file for login if it does not exist
+		File file = new File(fileName);
+		if(!file.exists()){
+			Charset utf8 = StandardCharsets.UTF_8;
+			List<String> firstLine = Arrays.asList("The following are user names and passwords followed by that user's level in speed, health, fire rate, and bomb radius"); //creates file for the first time with nothing in it
+			try {
+			    Files.write(Paths.get(fileName), firstLine, utf8,StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+			} catch (IOException ex) {
+			    ex.printStackTrace();
+			}
+		}
+		    
+		
+		//displays login screen when game is ran
+		int width = 250;
+		int height = 200;
+		LoginDisplay ld = new LoginDisplay();
+		
+		ld.setPreferredSize(new Dimension(width,height));
+		ld.setMaximumSize(new Dimension(width,height));
+		ld.setMinimumSize(new Dimension(width,height));
+		ld.setResizable(false);
+		
+	    ld.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    ld.setLocationRelativeTo(null);	
+	    ld.setVisible(true);
+	}
 }

@@ -1,0 +1,235 @@
+package firstgame.main;
+
+import java.awt.Color;
+import java.awt.Graphics;
+//import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class Bomb extends GameObject {
+	
+	Timer timer = new Timer();
+	private Handler handler;
+	private boolean bombDeployed = false;
+	private boolean explosion = false;
+	private static int bombLevel = 5;
+
+	private int bombRadius = 150; //changes with bombLevel
+	private long bombTime = 2000L; // Duration of explosion in milliseconds
+	
+	//centerX and centerY used to calculate collision of bomb with other objects
+	private int centerX;
+	private int centerY;
+
+
+	public Bomb(float x, float y, ID id, Handler handler) {
+		super(x, y, id);
+				
+		this.handler = handler;
+
+		velX = 0;
+		velY = 0;
+		
+		centerX = (int)(x+10); //10 is radius of bomb
+		centerY = (int)(y+10); //10 is radius of bomb
+		
+		if(bombLevel == 0){
+			bombRadius = 150;
+			bombTime = 2000L;
+		}
+		else if(bombLevel == 1){
+			bombRadius = 175;
+			bombTime = 2300L;
+		}
+		else if(bombLevel == 2){
+			bombRadius = 200;
+			bombTime = 2600L;
+		}
+		else if(bombLevel == 3){
+			bombRadius = 250;
+			bombTime = 3000L;
+		}
+		else if(bombLevel == 4){
+			bombRadius = 300;
+			bombTime = 3500L;
+		}
+		else if(bombLevel == 5){
+			bombRadius = 350;
+			bombTime = 4000L;
+		}
+		
+	}
+	
+	public boolean isBombDeployed() {
+		return bombDeployed;
+	}
+
+	public void setBombDeployed(boolean bombDeployed) {
+		this.bombDeployed = bombDeployed;
+	}
+	
+	public boolean isExplosion() {
+		return explosion;
+	}
+
+	public void setExplosion(boolean explosion) {
+		this.explosion = explosion;
+	}
+
+	public int getBombRadius() {
+		return bombRadius;
+	}
+
+	public void setBombRadius(int bombRadius) {
+		this.bombRadius = bombRadius;
+	}
+	
+	public static int getBombLevel() {
+		return bombLevel;
+	}
+
+	public static void setBombLevel(int bombLevel) {
+		Bomb.bombLevel = bombLevel;
+	}
+	
+	public void explosionTime(Bomb deployedBomb){
+		
+		//after this time in milliseconds bomb explodes
+			timer.schedule(new TimerTask() {
+				public void run() {
+					setExplosion(true);
+				}
+			}, 1000L);	
+				
+		//after this time in milliseconds bomb explosion disappears
+			timer.schedule(new TimerTask() {
+				public void run() {
+					setExplosion(false);
+					handler.removeObject(deployedBomb);
+				}
+			}, 1000L + bombTime);	
+	}
+	
+	public Rectangle getBounds(){
+		return new Rectangle((int)x+2,(int)y+2,16,16);
+	}
+
+
+	public void tick() {
+		x += velX;
+		y += velY;
+		
+		if(y <= 0 || y >= Game.HEIGHT - (48)) velY *= -1; //10 is the size of the enemy. Handles the object going outside the top and bottom edge
+		
+		if(x <= 0 || x >= Game.WIDTH - (24))  velX *= -1; //10 is the size of the enemy specified in render function. Handles object going outside right and left edge
+		
+		if(explosion){
+			collision();
+		}
+	}
+
+	public void collision(){
+		for(int i = 0; i < handler.object.size(); i++){
+			GameObject tempObject = handler.object.get(i);
+			
+			if(tempObject.getId() == ID.BasicEnemy || tempObject.getId() == ID.FastEnemy || tempObject.getId() == ID.SmartEnemy || tempObject.getId() == ID.BlinkingEnemy){
+				int centerXObject = (int) tempObject.getX()+8;
+				int centerYObject = (int) tempObject.getY()+8;
+				if(((centerXObject-centerX)*(centerXObject-centerX) + (centerYObject - centerY)*(centerYObject - centerY)) <= (12+bombRadius/2)*(12+bombRadius/2)){ //calculates if the radius of the bomb, and radius of this object are intersecting
+					handler.removeObject(tempObject);
+				}
+			}
+			
+			if(tempObject.getId() == ID.Player){
+				int centerXObject = (int) tempObject.getX()+8;
+				int centerYObject = (int) tempObject.getY()+8;
+				if(((centerXObject-centerX)*(centerXObject-centerX) + (centerYObject - centerY)*(centerYObject - centerY)) <= (13+bombRadius/2)*(13+bombRadius/2)){ //calculates if the radius of the bomb, and radius of this object are intersecting
+					HUD.HEALTH -= .1F;
+				}
+			}
+			
+			if(tempObject.getId() == ID.EnemyBoss){
+				int centerXObject = (int) tempObject.getX()+16;
+				int centerYObject = (int) tempObject.getY()+16;
+				if(((centerXObject-centerX)*(centerXObject-centerX) + (centerYObject - centerY)*(centerYObject - centerY)) <= (20+bombRadius/2)*(20+bombRadius/2)){//calculates if the radius of the bomb, and radius of this object are intersecting
+					HUD.ENEMYHEALTH -= .1F;
+				}
+				
+				//if boss's health == 0, get rid of boss and smart enemies
+				if((int)HUD.ENEMYHEALTH == 0){
+					for(int j = 0; j < handler.object.size(); j++){
+						GameObject smartEnemy = handler.object.get(j);
+						
+						if(smartEnemy.getId() == ID.SmartEnemy){
+							handler.removeObject(smartEnemy); //gets rid of smart enemies when boss dies
+							j--;
+						}
+					}
+					handler.removeObject(tempObject); //gets rid of boss
+				}
+			}
+		}
+	}
+	
+	public void render(Graphics g) {		
+		
+		//details of Bomb
+		g.setColor(Color.darkGray);
+		g.fillOval((int) x,(int) y, 20, 20);
+		g.setColor(Color.gray);
+		g.fillOval((int) x,(int) y, 18, 18);
+		
+		g.setColor(Color.darkGray);
+		g.drawOval((int) x, (int) y, 20, 20);
+		g.drawOval((int) x, (int) y, 19, 19);
+		g.drawOval((int) x, (int) y, 18, 18);
+		g.setColor(new Color(155, 155, 155));
+		g.fillOval((int) x+2, (int) y+2, 9, 9);
+		
+		
+		//Wick
+		g.setColor(new Color(50, 50, 50));
+		g.fillRect((int) x + 8, (int) y-5, 5, 5);
+		
+		if(bombDeployed){	
+			//Flame
+			g.setColor(new Color(180,0,0)); //red
+			g.fillOval((int) x+6, (int) y-13, 9, 9);
+			
+			g.setColor(new Color(230,69,0)); //Orange
+			g.fillOval((int) x+6, (int) y-13, 7, 7);
+			
+			g.setColor(new Color(200, 190, 0)); //yellow
+			g.fillOval((int) x+7, (int) y-13, 5, 5);
+		}
+		if(explosion){
+			g.setColor(Color.gray);
+			g.fillOval((int) x - bombRadius/2 + 4, (int)y - bombRadius/2 + 4,  bombRadius + 12, bombRadius + 12);
+			g.setColor(new Color(90,90,90));
+			g.fillOval((int) x - bombRadius/2 + 6, (int)y - bombRadius/2 + 6,  bombRadius + 8, bombRadius + 8);
+			g.setColor(Color.darkGray);
+			g.fillOval((int) x - bombRadius/2 + 8, (int)y - bombRadius/2 + 8,  bombRadius + 4, bombRadius + 4);
+			g.setColor(new Color(180,0,0)); //red
+			g.fillOval((int) x - bombRadius/2 + 10, (int)y - bombRadius/2 + 10, bombRadius, bombRadius);
+			g.setColor(Color.darkGray);
+			g.fillOval((int) x - (bombRadius/3) + 10, (int)y - (bombRadius/3) + 10, bombRadius*2/3, bombRadius*2/3);
+			g.setColor(new Color(230,69,0)); //Orange
+			g.fillOval((int) x - (bombRadius/3) + 12, (int)y - (bombRadius/3) + 12, bombRadius*2/3 - 4, bombRadius*2/3 - 4);
+			g.setColor(Color.darkGray);
+			g.fillOval((int) x - (bombRadius/6) + 8, (int)y - (bombRadius/6) + 8, bombRadius*1/3 +4, bombRadius*1/3+4);
+			g.setColor(new Color(200, 190, 0)); //yellow
+			g.fillOval((int) x - (bombRadius/6) + 10, (int)y - (bombRadius/6) + 10, bombRadius*1/3, bombRadius*1/3);
+			g.setColor(Color.lightGray);
+			g.fillOval((int) x - (bombRadius/16) + 9, (int)y - (bombRadius/16) + 9, bombRadius*1/8, bombRadius*1/8);
+		}
+		
+		//Graphics2D g2d = (Graphics2D) g;
+		
+		//The below code shows the bounds of the area designated as the collision area for the enemy 
+		//g.setColor(Color.green);
+		//g2d.draw(getBounds());
+		
+		
+	}
+}

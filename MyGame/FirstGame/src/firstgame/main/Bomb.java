@@ -23,8 +23,9 @@ public class Bomb extends GameObject {
 	private int centerY;
 
 
-	public Bomb(float x, float y, ID id, Handler handler) {
+	public Bomb(float x, float y, ID id, Handler handler, int bombLevel) {
 		super(x, y, id);
+		this.bombLevel = bombLevel;
 				
 		this.handler = handler;
 

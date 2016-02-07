@@ -75,7 +75,7 @@ public class EnemyBoss extends GameObject {
 			velX = Game.clamp(velX, -6f, 6f);
 			
 			int spawn = r.nextInt((int)(20*this.bulletProbability)); // probability set up to spawn normal enemies
-			int spawnSmart = r.nextInt((int)(20*this.bulletProbability)); // probability set up to spawn smart enemies
+			int spawnSmart = r.nextInt((int)(25*this.bulletProbability)); // probability set up to spawn smart enemies
 			// two cases below are so that the spawning of bullets looks smooth based on the direction the boss is traveling
 			if(velX > 0){
 				if(spawn == 0) handler.addObject(new EnemyBossBullet((int)x+18, (int)y+35, ID.BasicEnemy, handler, this));

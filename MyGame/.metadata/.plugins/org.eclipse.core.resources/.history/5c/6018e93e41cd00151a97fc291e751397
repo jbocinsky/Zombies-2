@@ -1,0 +1,66 @@
+package firstgame.main;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+
+public class DataBaseManager {
+
+	public DataBaseManager(){
+		
+		/*			File file = new File(".gameDataBase.txt");
+		      // creates the file
+		      if(!file.exists()){  //if file doesn't exist, create a newfile and write to it
+			      file.createNewFile();
+			      // creates a FileWriter Object
+			      FileWriter writer = new FileWriter(file); 
+			      // Writes the content to the file
+			      writer.write("This\n is\n an\n example\n"); 
+			      writer.flush();
+			      writer.close();
+		      }
+*/
+/*		      try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+		              new FileOutputStream("filename.txt"), "utf-8"))) {
+		    	  writer.write("something");
+		      }*/
+		      
+		      //Creates a FileReader Object
+/*		      FileReader fr = new FileReader(file); 
+		      char [] a = new char[50];
+		      fr.read(a); // reads the content to the array
+		      for(char c : a)
+		          System.out.print(c); //prints the characters one by one
+		      fr.close();
+		      
+		      System.out.println(file.exists()); // prints true if a file exists at that location
+		      System.out.println(file.getAbsoluteFile());// prints "c:\\eclipse\\eclipse.ini"
+		      */
+		      // is file executable?
+		      //System.out.println(file.canExecute());
+		      // is file readable?
+		      //System.out.println(file.canRead());
+		      // is file writable?
+		      //System.out.println(file.canWrite());
+		}	
+	
+	public void createUser(String userName, String passWord){
+		Charset utf8 = StandardCharsets.UTF_8;
+		List<String> lines = Arrays.asList(userName, passWord,"0","0","0","0"); //places username, password, speed, health, fire rate, bombradius
+
+		try {
+		    Files.write(Paths.get("GameDataBase.txt"), lines, utf8,StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+	}
+	
+}
+

@@ -1,0 +1,107 @@
+package firstgame.main;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+
+public class LoginDisplay extends JFrame{
+	
+	private JTextField userNameField;
+	private JPasswordField passwordField;
+	private JLabel un;
+	private JLabel pw;
+	private JButton loginButton;
+	private JButton signUpButton;
+	
+	public LoginDisplay(int width, int height, String title){
+		super("Login");
+		
+		//Main panel that fills whole screen that holds the following subPanels
+	    JPanel mainPanel = new JPanel();
+	    mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));	   
+	    
+	    //subPanels to be placed in Main Panel
+	    JPanel userNamePanel = new JPanel();
+	    JPanel passWordPanel = new JPanel();
+	    JPanel buttonsPanel = new JPanel();
+	    
+	    
+	    un = new JLabel("Username: ");
+	    userNamePanel.add(un);
+	    
+	    userNameField = new JTextField(20);
+	    userNamePanel.add(userNameField);
+	    
+	    
+	    pw = new JLabel("Password: ");
+	    passWordPanel.add(pw);
+	    
+	    passwordField = new JPasswordField(20);
+	    passWordPanel.add(passwordField);
+		
+	    
+	    //creates spacing between buttons and above password field
+	    buttonsPanel.add(Box.createRigidArea(new Dimension(0,50)));
+	    
+	    loginButton = new JButton("Login");
+	    buttonsPanel.add(loginButton);
+	    
+	    signUpButton = new JButton("Sign Up");
+	    buttonsPanel.add(signUpButton);
+	    
+	    //adds the SubPanels to the mainPanel in correct order
+	    mainPanel.add(userNamePanel);
+	    mainPanel.add(passWordPanel);
+	    mainPanel.add(buttonsPanel);
+	    //adds mainPanel to the JFrame
+	    add(mainPanel);	  
+
+	    
+	    LoginHandler loginHandler = new LoginHandler();
+	    userNameField.addActionListener(loginHandler);
+	    passwordField.addActionListener(loginHandler);
+	    loginButton.addActionListener(loginHandler);
+	    signUpButton.addActionListener(loginHandler);
+	    
+	}
+
+	private class LoginHandler implements ActionListener{
+		
+		public void actionPerformed(ActionEvent event){
+			
+
+			String getUserName = userNameField.getText();
+			String getPassWord = passwordField.getText();
+			String string = "";
+			
+			if(event.getSource() == userNameField){
+				string = String.format("Typed User Name: %s", getUserName);
+			}
+			else if(event.getSource() == passwordField){
+				string = String.format("Typed Pass Word: %s", event.getActionCommand());
+			}
+			else if(event.getSource() == loginButton){
+				string = String.format("login button: %s", event.getActionCommand());
+			}
+			else if(event.getSource() == signUpButton){
+				string = String.format("sign up button: %s", event.getActionCommand());
+			}
+			JOptionPane.showMessageDialog(null, string);
+			
+		}
+		
+	}
+	
+}

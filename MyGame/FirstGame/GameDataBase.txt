@@ -1,0 +1,7 @@
+The following are user names and passwords followed by that user's level in speed, health, fire rate, and bomb radius
+james
+jamesb
+0
+0
+0
+0

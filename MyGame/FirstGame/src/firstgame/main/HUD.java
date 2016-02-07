@@ -22,7 +22,7 @@ public class HUD {
 	public int score = 1;
 	public int level = 1;
 	
-	public HUD(Game game){
+	public HUD(Game game, int healthLevel){
 		this.game = game;
 		
 		if(healthLevel == 0){

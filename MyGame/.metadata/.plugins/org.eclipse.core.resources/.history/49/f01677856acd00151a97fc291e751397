@@ -1,0 +1,148 @@
+package firstgame.main;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+
+public class LoginDisplay extends JFrame{
+	
+	private JTextField userNameField;
+	private JPasswordField passWordField;
+	private JLabel un;
+	private JLabel pw;
+	private JButton loginButton;
+	private JButton newPlayerButton;
+	
+	public LoginDisplay(){
+		super("Please Login");
+		
+		//Main panel that fills whole screen that holds the following subPanels
+	    JPanel mainPanel = new JPanel();
+	    mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));	   
+	    
+	    //subPanels to be placed in Main Panel
+	    JPanel userNamePanel = new JPanel();
+	    JPanel passWordPanel = new JPanel();
+	    JPanel buttonsPanel = new JPanel();
+	    
+	    
+	    un = new JLabel("Username: ");
+	    userNamePanel.add(un);
+	    
+	    userNameField = new JTextField(20);
+	    userNamePanel.add(userNameField);
+	    
+	    
+	    pw = new JLabel("Password: ");
+	    passWordPanel.add(pw);
+	    
+	    passWordField = new JPasswordField(20);
+	    passWordPanel.add(passWordField);
+		
+	    
+	    //creates spacing between buttons and above password field
+	    buttonsPanel.add(Box.createRigidArea(new Dimension(0,50)));
+	    
+	    loginButton = new JButton("Login");
+	    buttonsPanel.add(loginButton);
+	    
+	    newPlayerButton = new JButton("New Player");
+	    buttonsPanel.add(newPlayerButton);
+	    
+	    //adds the SubPanels to the mainPanel in correct order
+	    mainPanel.add(userNamePanel);
+	    mainPanel.add(passWordPanel);
+	    mainPanel.add(buttonsPanel);
+	    //adds mainPanel to the JFrame
+	    add(mainPanel);	  
+
+	    
+	    LoginHandler loginHandler = new LoginHandler();
+	    userNameField.addActionListener(loginHandler);
+	    passWordField.addActionListener(loginHandler);
+	    loginButton.addActionListener(loginHandler);
+	    newPlayerButton.addActionListener(loginHandler);
+	    
+	}
+
+	private class LoginHandler implements ActionListener{
+		
+		public void actionPerformed(ActionEvent event){
+			
+			String getUserName = userNameField.getText();
+			String getPassWord = passWordField.getText();
+			String message = "";
+
+			if(event.getSource() == passWordField){
+				//searches for userName and passWord in Text Document
+				DataBaseManager DBMan = new DataBaseManager();
+				try {
+					if(DBMan.searchUserAndPass(getUserName, getPassWord)){
+						message = "You've logged in succesfully! Have fun!";
+						JOptionPane.showMessageDialog(null, message);
+						setVisible(false);
+						new Game();
+					}
+					else{
+						message = "You have not entered a valid user name and password. Please try again.";
+						JOptionPane.showMessageDialog(null, message);
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}	
+			}
+			else if(event.getSource() == loginButton){
+				//searches for userName and passWord in Text Document
+				DataBaseManager DBMan = new DataBaseManager();
+				try {
+					if(DBMan.searchUserAndPass(getUserName, getPassWord)){
+						message = "You've logged in succesfully! Have fun!";
+						JOptionPane.showMessageDialog(null, message);
+						setVisible(false);
+						Game myGame = new Game();
+						myGame.setUserName(getUserName);
+						myGame.setPassWord(getPassWord);
+						myGame.setFireRateLevel(DBMan.getSpeedLevel(getUserName, getPassWord));
+					}
+					else{
+						message = "You have not entered a valid user name and password. Please try again.";
+						JOptionPane.showMessageDialog(null, message);
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}				
+			}
+			else if(event.getSource() == newPlayerButton){
+				NewPlayerSignUp newPlayer  = new NewPlayerSignUp();
+				setVisible(false);
+
+				newPlayer.setPreferredSize(new Dimension(250,200));
+				newPlayer.setMaximumSize(new Dimension(250,200));
+				newPlayer.setMinimumSize(new Dimension(250,200));
+				newPlayer.setResizable(false);
+				
+			    newPlayer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    newPlayer.setLocationRelativeTo(null);	
+			    newPlayer.setVisible(true);			
+			}
+			
+
+			
+		}
+		
+	}
+	
+}

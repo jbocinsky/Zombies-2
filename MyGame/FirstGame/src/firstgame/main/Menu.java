@@ -22,14 +22,16 @@ public class Menu extends MouseAdapter {
 	private Random r = new Random();
 	private BulletController bulletCtrl;
 	private boolean replay = false;
+	private int bombLevel;
 	
 	
-	public Menu(Game game, Handler handler, Player player, HUD hud, BulletController bulletCtrl){
+	public Menu(Game game, Handler handler, Player player, HUD hud, BulletController bulletCtrl, int bombLevel){
 		this.game = game;
 		this.handler = handler;
 		this.player = player;
 		this.hud = hud;
 		this.bulletCtrl = bulletCtrl;
+		this.bombLevel = bombLevel;
 	}
 	
 	public void mousePressed(MouseEvent e){
@@ -77,7 +79,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
 				
 				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 								
@@ -101,7 +103,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
 				
 				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 								
@@ -121,7 +123,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
 				
 				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 								
@@ -143,7 +145,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
 				
 				//handler.addObject(new EnemyBoss(game,(Game.WIDTH / 2)- 48, -20, ID.EnemyBoss, handler));
 				

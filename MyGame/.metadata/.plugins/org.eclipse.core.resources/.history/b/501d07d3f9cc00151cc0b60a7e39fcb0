@@ -1,0 +1,103 @@
+package firstgame.main;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+
+public class LoginDisplay extends JFrame{
+	
+	private JTextField userName;
+	private JPasswordField passwordField;
+	private JLabel un;
+	private JLabel pw;
+	private JButton loginButton;
+	private JButton signUpButton;
+	
+	public LoginDisplay(int width, int height, String title){
+		super("Login");
+		//setLayout(new FlowLayout());
+	    JPanel mainPanel = new JPanel();
+	    JPanel textBoxes = new JPanel();
+	    JPanel buttons = new JPanel();
+	    
+	    mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));
+	    add(mainPanel);	    
+	    
+	    un = new JLabel("Username: ");
+	    textBoxes.add(un);
+	    
+	    userName = new JTextField(20);
+	    textBoxes.add(userName);
+	    
+	    pw = new JLabel("Password: ");
+	    textBoxes.add(pw);
+	    
+	    passwordField = new JPasswordField(20);
+	    textBoxes.add(passwordField);
+	    
+	    textBoxes.add(Box.createRigidArea(new Dimension(0,50)));
+		
+
+	    loginButton = new JButton("Login");
+	    buttons.add(loginButton);
+	    
+	    signUpButton = new JButton("Sign Up");
+	    buttons.add(signUpButton);
+	    
+	    mainPanel.add(textBoxes);
+	    mainPanel.add(Box.createRigidArea(new Dimension(0,10)));
+	    mainPanel.add(buttons);
+
+	    
+	    LoginHandler loginHandler = new LoginHandler();
+	    userName.addActionListener(loginHandler);
+	    passwordField.addActionListener(loginHandler);
+	    loginButton.addActionListener(loginHandler);
+	    signUpButton.addActionListener(loginHandler);
+	    
+	}
+
+	private class LoginHandler implements ActionListener{
+		
+		public void actionPerformed(ActionEvent event){
+			
+			String userName = "";
+			String passWord = "";
+			String string = "";
+			
+			if(event.getSource() == userName){
+				userName = String.format("userName field: %s", event.getActionCommand());
+			}
+			else if(event.getSource() == passwordField){
+				passWord = String.format("password field: %s", event.getActionCommand());
+			}
+			else if(event.getSource() == loginButton){
+				string = String.format("login button: %s", event.getActionCommand());
+				System.out.println(string);
+				System.out.println(userName);
+				System.out.println(passWord);
+			}
+			else if(event.getSource() == signUpButton){
+				string = String.format("sign up button: %s", event.getActionCommand());
+			}
+			JOptionPane.showMessageDialog(null, string);
+			
+
+			
+		}
+		
+	}
+	
+}
