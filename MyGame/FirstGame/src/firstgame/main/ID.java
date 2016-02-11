@@ -9,6 +9,7 @@ public enum ID {
 	BasicEnemy(),
 	SmartEnemy(),
 	EnemyBoss(),
+	EnemyBossBullet(),
 	HealthRegenerator(),
 	Bomb(),
 	BlinkingEnemy();

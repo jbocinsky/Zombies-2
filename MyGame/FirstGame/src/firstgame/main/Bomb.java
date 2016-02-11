@@ -10,6 +10,7 @@ import java.util.TimerTask;
 public class Bomb extends GameObject {
 	
 	Timer timer = new Timer();
+	private Game game;
 	private Handler handler;
 	private boolean bombDeployed = false;
 	private boolean explosion = false;
@@ -23,8 +24,9 @@ public class Bomb extends GameObject {
 	private int centerY;
 
 
-	public Bomb(float x, float y, ID id, Handler handler, int bombLevel) {
+	public Bomb(float x, float y, ID id, Game game, Handler handler, int bombLevel) {
 		super(x, y, id);
+		this.game = game;
 		this.bombLevel = bombLevel;
 				
 		this.handler = handler;
@@ -139,8 +141,18 @@ public class Bomb extends GameObject {
 				int centerYObject = (int) tempObject.getY()+8;
 				if(((centerXObject-centerX)*(centerXObject-centerX) + (centerYObject - centerY)*(centerYObject - centerY)) <= (12+bombRadius/2)*(12+bombRadius/2)){ //calculates if the radius of the bomb, and radius of this object are intersecting
 					handler.removeObject(tempObject);
+					game.setMoney(game.getMoney());
 				}
 			}
+
+			if(tempObject.getId() == ID.EnemyBossBullet){
+				int centerXObject = (int) tempObject.getX()+8;
+				int centerYObject = (int) tempObject.getY()+8;
+				if(((centerXObject-centerX)*(centerXObject-centerX) + (centerYObject - centerY)*(centerYObject - centerY)) <= (12+bombRadius/2)*(12+bombRadius/2)){ //calculates if the radius of the bomb, and radius of this object are intersecting
+					handler.removeObject(tempObject);
+				}
+			}
+
 			
 			if(tempObject.getId() == ID.Player){
 				int centerXObject = (int) tempObject.getX()+8;

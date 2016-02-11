@@ -1,7 +1,18 @@
-The following are user names and passwords followed by that user's level in speed, health, fire rate, and bomb radius
+The following are user names and passwords followed by that user's level in speed, health, fire rate, bomb radius, and money
+***************************************
+Justin
+password
+0
+0
+2
+0
+131
+***************************************
 james
 jamesb
 0
 0
 0
 0
+6
+***************************************

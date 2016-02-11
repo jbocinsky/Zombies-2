@@ -55,9 +55,18 @@ public class Menu extends MouseAdapter {
 				game.gameState = STATE.Settings;
 			}
 
-			//In Menu, when Quit button pressed
+			//In Menu, when Upgrade button pressed
 			else if(mouseOver(mx, my, 300, 500, 300, 100)){
-				System.exit(1);
+				//using a timer resolves the game getting stuck when button on current screen is at same location as button on next screen
+				new java.util.Timer().schedule( 
+				        new java.util.TimerTask() {
+				            @Override
+				            public void run() {
+				            	 game.gameState = STATE.Upgrade;
+				            }
+				        }, 
+				        100 
+				);
 			}
 		}
 			
@@ -79,7 +88,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, game, handler, bombLevel));
 				
 				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 								
@@ -103,7 +112,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, game, handler, bombLevel));
 				
 				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 								
@@ -123,7 +132,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, game, handler, bombLevel));
 				
 				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 								
@@ -145,7 +154,7 @@ public class Menu extends MouseAdapter {
 				
 				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
 				
-				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, game, handler, bombLevel));
 				
 				//handler.addObject(new EnemyBoss(game,(Game.WIDTH / 2)- 48, -20, ID.EnemyBoss, handler));
 				
@@ -189,12 +198,41 @@ public class Menu extends MouseAdapter {
 			}
 		}
 		
-		//resume button is pressed inside of Pause menu
-		else if(game.gameState == STATE.Pause){
-			
+		//back button is pressed inside of Upgrade menu
+		else if(game.gameState == STATE.Upgrade){
 			//boundaries of pause box in game, boundaries set in HUD
 			if(mouseOver(mx,my,300, 500, 300, 100)){ 
-				game.gameState = STATE.Game;
+				
+				//using a timer resolves the game getting stuck when button on current screen is at same location as button on next screen
+				new java.util.Timer().schedule( 
+				        new java.util.TimerTask() {
+				            @Override
+				            public void run() {
+				            	 game.gameState = STATE.Menu;
+				            }
+				        }, 
+				        100 
+				);
+			
+			}
+		}
+		
+		//back button is pressed inside of Pause screen
+		else if(game.gameState == STATE.Pause){
+			//boundaries of pause box in game, boundaries set in HUD
+			if(mouseOver(mx,my,300, 500, 300, 100)){ 
+				
+				//using a timer resolves the game getting stuck when button on current screen is at same location as button on next screen
+				new java.util.Timer().schedule( 
+				        new java.util.TimerTask() {
+				            @Override
+				            public void run() {
+				            	 game.gameState = STATE.Game;
+				            }
+				        }, 
+				        100 
+				);
+			
 			}
 		}
 		
@@ -255,10 +293,10 @@ public class Menu extends MouseAdapter {
 			g.drawString("Play", 397, 265);
 			
 			g.drawRect(300, 350, 300, 100); //button dimensions for Settings
-			g.drawString("How to Play", 308, 415);
+			g.drawString("How to Play", 309, 415);
 			
-			g.drawRect(300, 500, 300, 100); // button dimensions for quit
-			g.drawString("Quit", 397, 565);
+			g.drawRect(300, 500, 300, 100); // button dimensions for Upgrade
+			g.drawString("Upgrade", 348, 565);
 		}
 		if(game.gameState == STATE.Settings){
 			Font fnt = new Font("arial", 1, 80);
@@ -284,6 +322,31 @@ public class Menu extends MouseAdapter {
 			g.setColor(Color.blue);
 			g.drawRect(300, 500, 300, 100); // button dimensions for back
 			g.drawString("Back", 390, 565);
+		}
+		if(game.gameState == STATE.Pause){
+			Font fnt = new Font("arial", 1, 80);
+			Font fnt2 = new Font("arial", 1, 50);
+			Font fnt3 = new Font("arial", 1, 22);
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Pause", 341, 120);
+			g.fillRect(335, 132, 250, 4);
+			
+			g.setFont(fnt3);
+			g.setColor(Color.blue);
+			g.drawString("Use the arrow keys to move player and dodge enemies", 175, 200);
+			g.drawString("Collect Bombs and Green Smiles to help you along the way", 155, 240);
+			g.drawString("Gun automatically shoots, kill enemies to get past levels", 171, 280);
+			g.drawString("Use the SpaceBar to deploy bombs", 268, 320);
+			g.drawString("Use the 'P' button to Pause the game at any point", 195, 360);
+			g.drawString("Have Fun Playing!", 357, 400);
+			
+			g.setFont(fnt2);
+			
+			g.setColor(Color.blue);
+			g.drawRect(300, 500, 300, 100); // button dimensions for back
+			g.drawString("Resume", 353, 565);
 		}
 		if(game.gameState == STATE.End){
 			Font fnt = new Font("arial", 1, 80);

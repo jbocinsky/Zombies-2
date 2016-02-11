@@ -1,0 +1,432 @@
+package firstgame.main;
+
+import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Random;
+
+import firstgame.main.Game.DIFFICULTY;
+import firstgame.main.Game.STATE;
+
+public class Menu extends MouseAdapter {
+	
+	private Game game;
+	private Handler handler;
+	private Player player;
+	private HUD hud;
+	private Random r = new Random();
+	private BulletController bulletCtrl;
+	private boolean replay = false;
+	private int bombLevel;
+	
+	
+	public Menu(Game game, Handler handler, Player player, HUD hud, BulletController bulletCtrl, int bombLevel){
+		this.game = game;
+		this.handler = handler;
+		this.player = player;
+		this.hud = hud;
+		this.bulletCtrl = bulletCtrl;
+		this.bombLevel = bombLevel;
+	}
+	
+	public void mousePressed(MouseEvent e){
+
+	}
+	
+	public void mouseReleased(MouseEvent e){
+		int mx = e.getX(); // x location of mouse
+		int my = e.getY(); // y location of mouse
+		
+		// In Menu, when play button is pressed
+		if(game.gameState == STATE.Menu){
+			if(mouseOver(mx, my, 300, 200, 300, 100)){
+				game.gameState = STATE.Difficulty;
+				return;
+			}
+		
+		
+			// In Menu, when Settings button pressed
+			else if(mouseOver(mx, my, 300, 350, 300, 100)){
+				game.gameState = STATE.Settings;
+			}
+
+			//In Menu, when Upgrade button pressed
+			else if(mouseOver(mx, my, 300, 500, 300, 100)){
+				//using a timer resolves the game getting stuck when button on current screen is at same location as button on next screen
+				new java.util.Timer().schedule( 
+				        new java.util.TimerTask() {
+				            @Override
+				            public void run() {
+				            	 game.gameState = STATE.Upgrade;
+				            }
+				        }, 
+				        100 
+				);
+			}
+		}
+			
+		//In Settings State, and button pressed
+		if(game.gameState == STATE.Settings){
+			if(mouseOver(mx, my, 300, 500, 300, 100)){
+				game.gameState = STATE.Menu;
+				return;
+			}
+		}
+		
+		//In Difficulty State, and button pressed
+		if(game.gameState == STATE.Difficulty){
+			
+			// Easy button pressed
+			if(mouseOver(mx, my, 300, 200, 300, 100)){
+				game.difficulty = DIFFICULTY.Easy;
+				game.gameState = STATE.Game;
+				
+				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
+				
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				
+				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
+								
+				//handler.addObject(new EnemyBoss(game,(Game.WIDTH / 2)- 48, -20, ID.EnemyBoss, handler));
+				
+				handler.addObject(player); // places player in the game
+				
+				//handler.addObject(new BlinkingEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BlinkingEnemy, handler)); 
+				
+				
+				if(!replay){
+					player.automatedBullets();
+				}
+			}
+		
+		
+			// Medium button pressed
+			else if(mouseOver(mx, my, 300, 350, 300, 100)){
+				game.difficulty = DIFFICULTY.Medium;
+				game.gameState = STATE.Game;
+				
+				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
+				
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				
+				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
+								
+				//handler.addObject(new EnemyBoss(game,(Game.WIDTH / 2)- 48, -20, ID.EnemyBoss, handler));
+				
+				handler.addObject(player); // places player in the game
+				
+				if(!replay){
+					player.automatedBullets();
+				}
+			}
+
+			// Hard button pressed
+			else if(mouseOver(mx, my, 300, 500, 300, 100)){
+				game.difficulty = DIFFICULTY.Hard;
+				game.gameState = STATE.Game;
+				
+				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
+				
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				
+				//handler.addObject(new HealthRegenerator(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
+								
+				//handler.addObject(new EnemyBoss(game,(Game.WIDTH / 2)- 48, -20, ID.EnemyBoss, handler));
+				
+				handler.addObject(player); // places player in the game
+				
+				if(!replay){
+					player.automatedBullets();
+				}
+			}
+		}
+		
+		//In End State, when Play Again button pressed
+		if(game.gameState == STATE.End){
+			if(mouseOver(mx, my, 300, 500, 300, 100)){
+				handler.clearEnemys(); // removes all enemies from game
+				handler.clearPlayer(); // removes player from game
+				
+				handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH - 50),r.nextInt(Game.HEIGHT - 50), ID.BasicEnemy, handler)); // makes an enemy at the start of the game
+				
+				handler.addObject(new Bomb(r.nextInt(Game.WIDTH - 50), r.nextInt(Game.HEIGHT - 50), ID.Bomb, handler, bombLevel));
+				
+				//handler.addObject(new EnemyBoss(game,(Game.WIDTH / 2)- 48, -20, ID.EnemyBoss, handler));
+				
+				handler.addObject(player); // places player in the game
+
+				// DO NOT need to make a new bullet controller as it can use the one from the previous game
+				
+				//reset level and score to appropriate values for new game
+				hud.setLevel(1);
+				hud.setScore(0);
+				HUD.HEALTH = 100;
+				HUD.ENEMYHEALTH = 100;
+				
+				// following code resolves a bug where the new player would continue to move if the previous player was moving when it died
+				try {
+					Robot robot = new Robot();
+					robot.keyRelease(KeyEvent.VK_UP);
+					robot.keyRelease(KeyEvent.VK_DOWN);
+					robot.keyRelease(KeyEvent.VK_LEFT);
+					robot.keyRelease(KeyEvent.VK_RIGHT);
+				} catch (AWTException e1) {
+					e1.printStackTrace();
+				}
+				
+				//sets player to the center of the screen upon restart
+				player.setX(Game.WIDTH/2-32);
+				player.setY(Game.HEIGHT/2-32);
+				
+				bulletCtrl.bullet.clear(); // removes all bullets from game, this must be done last so no new bullets are created while this part of code runs
+				
+				game.gameState = STATE.Game; // done at end so game does not get nullpointer to the bullets
+			}
+		}
+		
+		// pause button is pressed
+		else if(game.gameState == STATE.Game){
+			
+			//boundaries of pause box in game, boundaries set in HUD
+			if(mouseOver(mx,my,859,611, 27, 27)){ 
+				game.gameState = STATE.Pause;
+			}
+		}
+		
+		//back button is pressed inside of Upgrade menu
+		else if(game.gameState == STATE.Upgrade){
+			//boundaries of pause box in game, boundaries set in HUD
+			if(mouseOver(mx,my,300, 500, 300, 100)){ 
+				
+				//using a timer resolves the game getting stuck when button on current screen is at same location as button on next screen
+				new java.util.Timer().schedule( 
+				        new java.util.TimerTask() {
+				            @Override
+				            public void run() {
+				            	 game.gameState = STATE.Menu;
+				            }
+				        }, 
+				        100 
+				);
+			
+			}
+		}
+		
+		//back button is pressed inside of Pause screen
+		else if(game.gameState == STATE.Pause){
+			//boundaries of pause box in game, boundaries set in HUD
+			if(mouseOver(mx,my,300, 500, 300, 100)){ 
+				
+				//using a timer resolves the game getting stuck when button on current screen is at same location as button on next screen
+				new java.util.Timer().schedule( 
+				        new java.util.TimerTask() {
+				            @Override
+				            public void run() {
+				            	 game.gameState = STATE.Game;
+				            }
+				        }, 
+				        100 
+				);
+			
+			}
+		}
+		
+		//when you win the game and click Menu
+		else if(game.gameState == STATE.Winner){
+			
+			//When you win and Menu button pressed
+			if(mouseOver(mx,my,300, 500, 300, 100)){ 
+				game.gameState = STATE.Menu;
+				
+				replay = true;
+				
+				handler.clearEnemys(); // removes all enemies from game
+				handler.clearPlayer(); // removes player from game
+				
+				//sets player to the center of the screen upon restart
+				player.setX(Game.WIDTH/2-32);
+				player.setY(Game.HEIGHT/2-32);
+				
+				
+				//reset level and score to appropriate values for new game
+				hud.setLevel(1);
+				hud.setScore(0);
+				HUD.HEALTH = 100;
+				HUD.ENEMYHEALTH = 100;
+			}
+		}
+	}
+	
+	private boolean mouseOver(int mx, int my, int x, int y, int width, int height){
+		if(mx > x && mx < x + width){
+			if(my > y && my < y + height){
+				return true;
+			}else return false;
+		}else return false;
+	}
+	
+	public void tick(){
+		
+	}
+	
+	public void render(Graphics g){
+		if(game.gameState == STATE.Menu){
+			
+			Font fnt = new Font("arial", 1, 75);
+			Font fnt2 = new Font("arial", 1, 50);
+			
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Zombies^2", 255, 120);
+			g.fillRect(252, 132, 400, 4);
+			
+			g.setFont(fnt2);		
+			g.setColor(Color.blue);
+			
+			g.drawRect(300, 200, 300, 100); //button dimensions for play
+			g.drawString("Play", 397, 265);
+			
+			g.drawRect(300, 350, 300, 100); //button dimensions for Settings
+			g.drawString("How to Play", 309, 415);
+			
+			g.drawRect(300, 500, 300, 100); // button dimensions for Upgrade
+			g.drawString("Upgrade", 348, 565);
+		}
+		if(game.gameState == STATE.Settings){
+			Font fnt = new Font("arial", 1, 80);
+			Font fnt2 = new Font("arial", 1, 50);
+			Font fnt3 = new Font("arial", 1, 22);
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Settings", 295, 120);
+			g.fillRect(293, 132, 320, 4);
+			
+			g.setFont(fnt3);
+			g.setColor(Color.blue);
+			g.drawString("Use the arrow keys to move player and dodge enemies", 175, 200);
+			g.drawString("Collect Bombs and Green Smiles to help you along the way", 155, 240);
+			g.drawString("Gun automatically shoots, kill enemies to get past levels", 171, 280);
+			g.drawString("Use the SpaceBar to deploy bombs", 268, 320);
+			g.drawString("Use the 'P' button to Pause the game at any point", 195, 360);
+			g.drawString("Have Fun Playing!", 357, 400);
+			
+			g.setFont(fnt2);
+			
+			g.setColor(Color.blue);
+			g.drawRect(300, 500, 300, 100); // button dimensions for back
+			g.drawString("Back", 390, 565);
+		}
+		if(game.gameState == STATE.Pause){
+			Font fnt = new Font("arial", 1, 80);
+			Font fnt2 = new Font("arial", 1, 50);
+			Font fnt3 = new Font("arial", 1, 22);
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Settings", 295, 120);
+			g.fillRect(293, 132, 320, 4);
+			
+			g.setFont(fnt3);
+			g.setColor(Color.blue);
+			g.drawString("Use the arrow keys to move player and dodge enemies", 175, 200);
+			g.drawString("Collect Bombs and Green Smiles to help you along the way", 155, 240);
+			g.drawString("Gun automatically shoots, kill enemies to get past levels", 171, 280);
+			g.drawString("Use the SpaceBar to deploy bombs", 268, 320);
+			g.drawString("Use the 'P' button to Pause the game at any point", 195, 360);
+			g.drawString("Have Fun Playing!", 357, 400);
+			
+			g.setFont(fnt2);
+			
+			g.setColor(Color.blue);
+			g.drawRect(300, 500, 300, 100); // button dimensions for back
+			g.drawString("Back", 390, 565);
+		}
+		if(game.gameState == STATE.End){
+			Font fnt = new Font("arial", 1, 80);
+			Font fnt2 = new Font("arial", 1, 50);
+			Font fnt3 = new Font("arial", 1, 22);
+			
+			g.setFont(fnt);
+			g.setColor(Color.red);
+			g.drawString("GameOver", 240, 120);
+			
+			g.setFont(fnt3);
+			g.setColor(Color.white);
+			g.drawString("You survived till level: ", 315, 280);
+			g.setColor(Color.yellow);
+			g.drawString("" + hud.getLevel(), 545, 280);
+			
+			g.setColor(Color.white);
+			g.drawString("With a score of: ", 330, 320);			
+			g.setColor(Color.yellow);
+			g.drawString("" + hud.getScore(), 500, 320);
+			
+			
+			g.setFont(fnt2);		
+			g.setColor(Color.black);
+			g.fillRect(300, 500, 300, 100); // allows cool effect for player to go behind button
+			g.setColor(Color.blue);
+			g.drawRect(300, 500, 300, 100); // button dimensions for Play Again
+			g.drawString("Play Again", 325, 565);
+		}
+		if(game.gameState == STATE.Difficulty){
+		
+			Font fnt = new Font("arial", 1, 75);
+			Font fnt2 = new Font("arial", 1, 50);
+			
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Difficulty", 292, 120);
+			g.fillRect(290, 132, 320, 4);
+			
+			g.setFont(fnt2);		
+			g.setColor(Color.blue);
+			
+			g.drawRect(300, 200, 300, 100); //button dimensions for Easy
+			g.drawString("Easy", 390, 265);
+			
+			g.drawRect(300, 350, 300, 100); //button dimensions for Medium
+			g.drawString("Medium", 355, 415);
+			
+			g.drawRect(300, 500, 300, 100); // button dimensions for Hard
+			g.drawString("Hard", 392, 565);
+		}
+		
+		if(game.gameState == STATE.Winner){
+			
+			Font fnt = new Font("arial", 1, 75);
+			Font fnt2 = new Font("arial", 1, 50);
+			Font fnt3 = new Font("arial", 1, 22);
+			
+			
+			g.setFont(fnt);
+			g.setColor(new Color(75,220,0)); //green
+			g.drawString("You Beat The Game!", 80, 120);
+			g.fillRect(80, 132, 735, 4);
+			
+			g.setFont(fnt3);
+			g.drawString("You survived till level: ", 315, 280);
+			g.setColor(Color.yellow);
+			g.drawString("" + hud.getLevel(), 545, 280);
+			
+			g.setColor(new Color(75,220,0)); //green
+			g.drawString("With a score of: ", 330, 320);			
+			g.setColor(Color.yellow);
+			g.drawString("" + hud.getScore(), 500, 320);
+			
+			g.setFont(fnt2);
+			g.setColor(Color.blue);
+			g.drawRect(300, 500, 300, 100); // button dimensions for Menu
+			g.drawString("Menu", 382, 565);
+		}
+		
+	}
+}

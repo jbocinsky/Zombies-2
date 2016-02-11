@@ -1,7 +1,9 @@
 package firstgame.main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +13,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.lang.String;
 
 public class DataBaseManager {
 
@@ -48,7 +51,7 @@ public class DataBaseManager {
 		//userNameCheck established set above by scanning the DataBase
 		if(userNameCheck){
 			Charset utf8 = StandardCharsets.UTF_8;
-			List<String> lines = Arrays.asList(userName, passWord,"0","0","0","0"); //places username, password, speed, health, fire rate, bombradius
+			List<String> lines = Arrays.asList(userName, passWord,"0","0","0","0","0","***************************************"); //places username, password, speed, health, fire rate, bombradius, and money
 	
 			try {
 			    Files.write(Paths.get(fileName), lines, utf8,StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -125,7 +128,8 @@ public class DataBaseManager {
 				int healthLevel = Integer.parseInt(sc.nextLine());
 				int fireRateLevel = Integer.parseInt(sc.nextLine());
 				int bombLevel = Integer.parseInt(sc.nextLine());
-				System.out.println(speedLevel);
+				int money = Integer.parseInt(sc.nextLine());
+				//System.out.println(speedLevel);
 				sc.close();
 				return speedLevel;
 			}
@@ -160,7 +164,8 @@ public class DataBaseManager {
 				int healthLevel = Integer.parseInt(sc.nextLine());
 				int fireRateLevel = Integer.parseInt(sc.nextLine());
 				int bombLevel = Integer.parseInt(sc.nextLine());
-				System.out.println(healthLevel);
+				int money = Integer.parseInt(sc.nextLine());
+				//System.out.println(healthLevel);
 				sc.close();
 				return healthLevel;
 			}
@@ -195,7 +200,8 @@ public class DataBaseManager {
 				int healthLevel = Integer.parseInt(sc.nextLine());
 				int fireRateLevel = Integer.parseInt(sc.nextLine());
 				int bombLevel = Integer.parseInt(sc.nextLine());
-				System.out.println(fireRateLevel);
+				int money = Integer.parseInt(sc.nextLine());
+				//System.out.println(fireRateLevel);
 				sc.close();
 				return fireRateLevel;
 			}
@@ -230,7 +236,8 @@ public class DataBaseManager {
 				int healthLevel = Integer.parseInt(sc.nextLine());
 				int fireRateLevel = Integer.parseInt(sc.nextLine());
 				int bombLevel = Integer.parseInt(sc.nextLine());
-				System.out.println(bombLevel);
+				int money = Integer.parseInt(sc.nextLine());
+				//System.out.println(bombLevel);
 				sc.close();
 				return bombLevel;
 			}
@@ -240,5 +247,93 @@ public class DataBaseManager {
 		
 	}
 	
+	public int getMoney(String userName, String passWord) throws FileNotFoundException{
+		Scanner sc = new Scanner(new File(fileName));
+		boolean userNameCheck = false;
+		int userNameLine = 0;
+		int lineCount = 0;
+		boolean skip = false;
+		
+		//goes through all the lines in the file and searches for username and password
+		while(sc.hasNextLine()){
+			lineCount++;
+			String line = sc.nextLine();
+			
+			//checks if username is correct
+			if(line.equals(userName) && !skip){
+				userNameCheck = true;
+				userNameLine = lineCount;
+				skip = true;
+			}
+			
+			//checks if password is the same and if current line is one past the correct username
+			if(userNameCheck && line.equals(passWord) && ((lineCount - userNameLine) == 1)){
+				int speedLevel = Integer.parseInt(sc.nextLine());
+				int healthLevel = Integer.parseInt(sc.nextLine());
+				int fireRateLevel = Integer.parseInt(sc.nextLine());
+				int bombLevel = Integer.parseInt(sc.nextLine());
+				int money = Integer.parseInt(sc.nextLine());
+				//System.out.println(money);
+				sc.close();
+				return money;
+			}
+		}
+		sc.close();
+		return 0;
+	}
+	
+	public void saveGame(String userName, String passWord, int speedLevel, int healthLevel, int fireRateLevel, int bombLevel, int money) throws IOException{
+	
+		BufferedReader file = new BufferedReader(new FileReader(fileName));
+		BufferedReader newLineCatchFile = new BufferedReader(new FileReader(fileName)); //is responsible for reading one line ahead of the main file reader, so we know when we are at the last line of the file
+		newLineCatchFile.readLine();//gets this file reader one ahead of the other
+		
+		String line; 
+		String inputFile = "";
+		String oldUserData= "";
+		String newUserData = userName + '\n' + passWord + '\n' + speedLevel + '\n' + healthLevel + '\n' + fireRateLevel + '\n' + bombLevel + '\n' + money + '\n';
+		int counter = 0;
+		
+		while((line = file.readLine()) != null){
+			//gets the oldUserData from the file so we know what to replace in the file
+			if(line.equals(userName) || (counter > 0 && counter < 7)){
+				counter++;
+				oldUserData += line + '\n';
+				
+			}
+			//creates String that is identical to original text file
+			if(newLineCatchFile.readLine() != null){
+				inputFile += line + '\n';
+			}
+			else{
+				inputFile += line;
+			}
+		}
+		
+		newLineCatchFile.close();
+		
+		file.close();
+		
+		String newFile = inputFile.replaceFirst(oldUserData, newUserData);
+		
+		File fileToBeDeleted = new File(fileName);
+	
+		if(fileToBeDeleted.delete()){
+			//creates new updated file if old one was deleted
+			File file2 = new File(fileName);
+			if(!file2.exists()){
+				Charset utf8 = StandardCharsets.UTF_8;
+				List<String> data = Arrays.asList(newFile); //creates new file with new updated saved data in it
+				
+				//writes new data to new file
+				try {
+				    Files.write(Paths.get(fileName), data, utf8,StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				    //System.out.println("Saved Game!");
+				} catch (IOException ex) {
+				    ex.printStackTrace();
+				}
+			}
+		}
+	}
 }
 

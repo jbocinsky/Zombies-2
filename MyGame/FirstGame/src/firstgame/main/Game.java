@@ -30,10 +30,11 @@ public class Game extends Canvas implements Runnable{
 	private HUD hud;
 	private Spawn spawner;
 	private BulletController bulletCtrl;
-	private static Player player;
+	private Player player;
 	private Menu menu;
-	private PauseMenu pauseMenu;
+	private UpgradeMenu upgradeMenu;
 	private KeyInput keyInput;
+	private Window window;
 	private static String fileName = "GameDataBase.txt";
 	private String userName = "";
 	private String passWord = "";
@@ -41,6 +42,7 @@ public class Game extends Canvas implements Runnable{
 	private int healthLevel = 0;
 	private int fireRateLevel = 0;
 	private int bombLevel = 0;
+	private int money = 0;
 	
 	public enum STATE{
 		Login,
@@ -50,6 +52,7 @@ public class Game extends Canvas implements Runnable{
 		Game,
 		Winner,
 		Pause,
+		Upgrade,
 		End
 	};
 	
@@ -63,7 +66,15 @@ public class Game extends Canvas implements Runnable{
 
 	public DIFFICULTY difficulty = DIFFICULTY.Easy; // sets difficulty difficulty to easy
 	
-	public Game(String userName, String passWord, int speedLevel, int healthLevel, int fireRateLevel, int bombLevel){
+	public Game(String userName, String passWord, int speedLevel, int healthLevel, int fireRateLevel, int bombLevel, int money){
+		//sets the following values based on the logged in user, from here these values are handled internally
+		this.userName = userName;
+		this.passWord = passWord;
+		this.speedLevel = speedLevel;
+		this.healthLevel = healthLevel;
+		this.fireRateLevel = fireRateLevel;
+		this.bombLevel = bombLevel;
+		this.money = money;
 		
 		handler = new Handler(this); // initiates our handler that handles game objects
 		bulletCtrl = new BulletController(); // initiates the bullet controller that handles creating and removing bullets
@@ -76,15 +87,104 @@ public class Game extends Canvas implements Runnable{
 		menu = new Menu(this, handler, player, hud, bulletCtrl, bombLevel);
 		this.addMouseListener(menu);
 		
-		pauseMenu = new PauseMenu(this);
-		this.addMouseListener(pauseMenu);
+		window = new Window(WIDTH, HEIGHT, "Zombies^2", this);  // creates window to view game
 		
-		new Window(WIDTH, HEIGHT, "Zombies^2", this);  // creates window to view game
-
+		upgradeMenu = new UpgradeMenu(this, player, handler, bulletCtrl, window, hud);
+		this.addMouseListener(upgradeMenu);
+		
 		spawner = new Spawn(this, handler, hud, player, bombLevel);  // initiates spawner in game
 		
 	}	
 	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public Handler getHandler() {
+		return handler;
+	}
+
+	public void setHandler(Handler handler) {
+		this.handler = handler;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassWord() {
+		return passWord;
+	}
+
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
+
+	public int getSpeedLevel() {
+		return speedLevel;
+	}
+
+	public void setSpeedLevel(int speedLevel) {
+		this.speedLevel = speedLevel;
+	}
+
+	public int getHealthLevel() {
+		return healthLevel;
+	}
+
+	public void setHealthLevel(int healthLevel) {
+		this.healthLevel = healthLevel;
+	}
+
+	public int getFireRateLevel() {
+		return fireRateLevel;
+	}
+
+	public void setFireRateLevel(int fireRateLevel) {
+		this.fireRateLevel = fireRateLevel;
+	}
+
+	public int getBombLevel() {
+		return bombLevel;
+	}
+
+	public void setBombLevel(int bombLevel) {
+		this.bombLevel = bombLevel;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}	
+
+	public BulletController getBulletCtrl() {
+		return bulletCtrl;
+	}
+
+	public void setBulletCtrl(BulletController bulletCtrl) {
+		this.bulletCtrl = bulletCtrl;
+	}
+
+	public Window getWindow() {
+		return window;
+	}
+
+	public void setWindow(Window window) {
+		this.window = window;
+	}
+	
+
 	public synchronized void start(){
 		thread = new Thread(this);
 		thread.start();
@@ -142,12 +242,12 @@ public class Game extends Canvas implements Runnable{
 				gameState = STATE.End;
 			}
 		}
-		else if(gameState == STATE.Menu || gameState == STATE.End || gameState == STATE.Settings || gameState == STATE.Winner){
+		else if(gameState == STATE.Menu || gameState == STATE.End || gameState == STATE.Settings || gameState == STATE.Winner || gameState == STATE.Pause){
 			handler.tick();
 			menu.tick();
 		}
-		else if(gameState == STATE.Pause){
-			pauseMenu.tick();
+		else if(gameState == STATE.Upgrade){
+			upgradeMenu.tick();
 			bulletCtrl.tick();
 		}
 	}
@@ -190,11 +290,11 @@ public class Game extends Canvas implements Runnable{
 				}
 			}
 		}
-		else if(gameState == STATE.Menu || gameState == STATE.Settings || gameState == STATE.Difficulty || gameState == STATE.Winner){
+		else if(gameState == STATE.Menu || gameState == STATE.Settings || gameState == STATE.Difficulty || gameState == STATE.Winner || gameState == STATE.Pause){
 			menu.render(g);
 		}
-		else if(gameState == STATE.Pause){
-			pauseMenu.render(g);
+		else if(gameState == STATE.Upgrade){
+			upgradeMenu.render(g);
 		}
 		
 		g.dispose();
@@ -215,7 +315,7 @@ public class Game extends Canvas implements Runnable{
 		File file = new File(fileName);
 		if(!file.exists()){
 			Charset utf8 = StandardCharsets.UTF_8;
-			List<String> firstLine = Arrays.asList("The following are user names and passwords followed by that user's level in speed, health, fire rate, and bomb radius"); //creates file for the first time with nothing in it
+			List<String> firstLine = Arrays.asList("The following are user names and passwords followed by that user's level in speed, health, fire rate, bomb radius, and money","***************************************"); //creates file for the first time with nothing in it
 			try {
 			    Files.write(Paths.get(fileName), firstLine, utf8,StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			} catch (IOException ex) {

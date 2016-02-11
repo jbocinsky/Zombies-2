@@ -5,8 +5,6 @@ import java.awt.Font;
 //import java.awt.Font;
 import java.awt.Graphics;
 
-import firstgame.main.Game.STATE;
-
 public class HUD {
 
 	private Game game;
@@ -54,6 +52,43 @@ public class HUD {
 		
 	}
 	
+	public int getHealthLevel() {
+		return healthLevel;
+	}
+
+	public void setHealthLevel(int healthLevel) {
+		HEALTH = 100;
+		
+		if(healthLevel == 0){
+			healthFactor = 1;
+			HEALTH = 100;
+		}
+		else if(healthLevel == 1){
+			healthFactor = 1.2F;
+			HEALTH *= healthFactor;
+		}
+		else if(healthLevel == 2){
+			healthFactor = 1.4F;
+			HEALTH *= healthFactor;
+		}
+		else if(healthLevel == 3){
+			healthFactor = 1.6F;
+			HEALTH *= healthFactor;
+		}
+		else if(healthLevel == 4){
+			healthFactor = 1.8F;
+			HEALTH *= healthFactor;
+		}
+		else if(healthLevel == 5){
+			healthFactor = 2;
+			HEALTH *= healthFactor;
+		}
+		
+		maxHealth = HEALTH; 
+		
+		this.healthLevel = healthLevel;
+	}
+
 	public void tick(){
 		HEALTH = Game.clamp(HEALTH, 0, maxHealth);
 		greenValue = HEALTH*1.4f;
@@ -84,7 +119,6 @@ public class HUD {
 		g.drawString("Bombs: " + bombCount, 10, 55);
 		g.drawString("Score: " + score, 10, 72);
 		g.drawString("Level: " + level, 10, 89);
-		g.drawString("Difficulty: " + game.difficulty, 10, 635);
 	
 		//Pause button
 		g.setColor(Color.gray);
@@ -92,6 +126,11 @@ public class HUD {
 		g.drawRect(859,611, 27, 27);
 		g.fillRect(866, 617, 5, 16);
 		g.fillRect(875,617,5,16);
+		
+		//Money display
+		g.setColor(new Color(255,215,0));//gold
+		g.setFont(new Font("arial", 1, 12));
+		g.drawString("Money: " + game.getMoney(), 10, 635);
 	}
 	
 	public void renderEnemy(Graphics g){

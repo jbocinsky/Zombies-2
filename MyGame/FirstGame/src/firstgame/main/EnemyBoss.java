@@ -78,7 +78,7 @@ public class EnemyBoss extends GameObject {
 			int spawnSmart = r.nextInt((int)(25*this.bulletProbability)); // probability set up to spawn smart enemies
 			// two cases below are so that the spawning of bullets looks smooth based on the direction the boss is traveling
 			if(velX > 0){
-				if(spawn == 0) handler.addObject(new EnemyBossBullet((int)x+18, (int)y+35, ID.BasicEnemy, handler, this));
+				if(spawn == 0) handler.addObject(new EnemyBossBullet((int)x+18, (int)y+35, ID.EnemyBossBullet, handler, this));
 				
 				// makes sure there's only one current smart enemy at a time
 				if(spawnSmart == 0 && spawn == 0) {
@@ -96,7 +96,7 @@ public class EnemyBoss extends GameObject {
 				}	
 			}
 			if(velX < 0){
-				if(spawn == 0) handler.addObject(new EnemyBossBullet((int)x+2, (int)y+35, ID.BasicEnemy, handler, this));
+				if(spawn == 0) handler.addObject(new EnemyBossBullet((int)x+2, (int)y+35, ID.EnemyBossBullet, handler, this));
 				
 				// makes sure there's only one current smart enemy at a time
 				if(spawnSmart == 0 && spawn == 0){

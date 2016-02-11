@@ -4,14 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import firstgame.main.Game.DIFFICULTY;
+
 public class Bullet extends GameObject{
 	
+	private Game game;
 	private Player player;
 	private Handler handler;
 	private BulletController c;
 	
-	public Bullet(int x, int y, ID id, Handler handler, Player player, BulletController c, float velY) {
+	public Bullet(int x, int y, ID id, Game game, Handler handler, Player player, BulletController c, float velY) {
 		super(x, y, id);
+		this.game = game;
 		this.handler = handler;
 		this.player = player;
 		this.c = c;
@@ -43,12 +47,23 @@ public class Bullet extends GameObject{
 			
 			GameObject tempObject = handler.object.get(i);
 			
+			//case when you shoot enemies in each level, excludes the boss bullets, becuase you don't get money for them
 			if(tempObject.getId() == ID.BasicEnemy || tempObject.getId() == ID.FastEnemy || tempObject.getId() == ID.SmartEnemy || tempObject.getId() == ID.BlinkingEnemy){ // tempobject is a BasicEnemy, FastEnemy, SmartEnemy, or BlinkingEnemy
+				if(this.getBounds().intersects(tempObject.getBounds())){ // if collision occurs
+					c.removeBullet(this);
+					handler.removeObject(tempObject);
+					game.setMoney(game.getMoney()+1);
+				}
+			}
+			
+			//case when you shoot enemybossbullet
+			if(tempObject.getId() == ID.EnemyBossBullet){ // tempobject is a EnemyBossBullet
 				if(this.getBounds().intersects(tempObject.getBounds())){ // if collision occurs
 					c.removeBullet(this);
 					handler.removeObject(tempObject);
 				}
 			}
+			
 			// case when you shoot the enemy boss
 			if(tempObject.getId() == ID.EnemyBoss){
 				if(this.getBounds().intersects(tempObject.getBounds())){
@@ -65,6 +80,18 @@ public class Bullet extends GameObject{
 							}
 						}
 						handler.removeObject(tempObject); //gets rid of boss
+						
+						//gives money for killing boss based on difficulty setting
+						if(game.difficulty == DIFFICULTY.Easy){
+							game.setMoney(game.getMoney() + 100);
+						}
+						else if(game.difficulty == DIFFICULTY.Medium){
+							game.setMoney(game.getMoney() + 200);
+						}
+						else if(game.difficulty == DIFFICULTY.Hard){
+							game.setMoney(game.getMoney() + 400);
+						}
+						
 					}
 				}	
 			}

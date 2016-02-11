@@ -2,6 +2,7 @@ package firstgame.main;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import firstgame.main.Game.STATE;
 
@@ -38,9 +39,17 @@ public class KeyInput extends KeyAdapter{
 				if(key == KeyEvent.VK_LEFT) { tempObject.setVelX(-player.getSpeed()); tempObject.setL(true); getKeyDown()[3] = true; }
 			}
 		}
-		if(key == KeyEvent.VK_ESCAPE) System.exit(1); //exits out of game when escape or backspace is pressed
-
-	}
+			if(key == KeyEvent.VK_ESCAPE){
+				DataBaseManager DBMan = new DataBaseManager();
+				try {
+					DBMan.saveGame(game.getUserName(), game.getPassWord(), game.getSpeedLevel(), game.getHealthLevel(), game.getFireRateLevel(), game.getBombLevel(), game.getMoney());
+				} catch (IOException e1) {
+					System.out.println("Sorry, the game was unable to save");
+					e1.printStackTrace();
+				}
+				System.exit(1); //exits out of game when escape or backspace is pressed
+			}
+		}
 
 	public void keyReleased(KeyEvent e){
 		int key = e.getKeyCode();

@@ -22,7 +22,7 @@ public class Player extends GameObject {
 	private int fireRateLevel = 0;
 	private BulletController c;
 	private float damageDealer = 1;
-	private int speedLevel = 0;
+	private int speedLevel = 5;
 	private float speed = 5;
 	private int bombLevel;
 	
@@ -81,12 +81,53 @@ public class Player extends GameObject {
 		}
 		else if(speedLevel == 5){
 			speed = 6.5F;
-		}
-		
-		
+		}		
 	}
 
 	
+	public int getFireRateLevel() {
+		return fireRateLevel;
+	}
+
+	public void setFireRateLevel(int fireRateLevel) {
+		this.fireRateLevel = fireRateLevel;
+	}
+
+	public int getSpeedLevel() {
+		return speedLevel;
+	}
+
+	public void setSpeedLevel(int speedLevel) {
+		if(speedLevel == 0){
+			speed = 5F;
+		}
+		else if(speedLevel == 1){
+			speed = 5.3F;
+		}
+		else if(speedLevel == 2){
+			speed = 5.6F;
+		}
+		else if(speedLevel == 3){
+			speed = 5.9F;
+		}
+		else if(speedLevel == 4){
+			speed = 6.2F;
+		}
+		else if(speedLevel == 5){
+			speed = 6.5F;
+		}		
+		
+		this.speedLevel = speedLevel;
+	}
+
+	public int getBombLevel() {
+		return bombLevel;
+	}
+
+	public void setBombLevel(int bombLevel) {
+		this.bombLevel = bombLevel;
+	}
+
 	public float getSpeed() {
 		return speed;
 	}
@@ -95,6 +136,7 @@ public class Player extends GameObject {
 		this.speed = speed;
 	}
 
+	
 	public Rectangle getBounds(){
 		return new Rectangle((int)x,(int)y-10,13,34);  //32 x 32 is the bounds of the player, adjust this for my specs of player
 	}
@@ -115,7 +157,7 @@ public class Player extends GameObject {
 			
 			GameObject tempObject = handler.object.get(i);
 			
-			if(tempObject.getId() == ID.BasicEnemy || tempObject.getId() == ID.FastEnemy || tempObject.getId() == ID.SmartEnemy || tempObject.getId() == ID.BlinkingEnemy){ // temp object is a BasicEnemy, FastEnemy, or SmartEnemy
+			if(tempObject.getId() == ID.BasicEnemy || tempObject.getId() == ID.FastEnemy || tempObject.getId() == ID.SmartEnemy || tempObject.getId() == ID.BlinkingEnemy || tempObject.getId() == ID.EnemyBossBullet){ // temp object is a BasicEnemy, FastEnemy, or SmartEnemy
 				if(getBounds().intersects(tempObject.getBounds())){ // if collision occurs
 					HUD.HEALTH -= 12*damageDealer;
 					handler.removeObject(tempObject);
@@ -124,7 +166,7 @@ public class Player extends GameObject {
 			
 			if(tempObject.getId() == ID.EnemyBoss){
 				if(getBounds().intersects(tempObject.getBounds())){ // if collision occurs with boss
-					HUD.HEALTH -= 20;
+					HUD.HEALTH -= 2;
 				}
 			}	
 			
@@ -209,7 +251,7 @@ public class Player extends GameObject {
 		//makes a new bullet every 'fireRate' seconds
 		timer.scheduleAtFixedRate(new TimerTask() {
 			  public void run() {				  
-				  c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, handler, player, c, 0));
+				  c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, game, handler, player, c, 0));
 			  }
 			}, 500L, fireRate); 
 		}
@@ -217,8 +259,8 @@ public class Player extends GameObject {
 			//makes a new bullet every 'fireRate' seconds
 			timer.scheduleAtFixedRate(new TimerTask() {
 				  public void run() {
-						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, handler, player, c, -.35F));
-						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, handler, player, c, .35F));
+						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, game, handler, player, c, -.35F));
+						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, game, handler, player, c, .35F));
 				  }
 				}, 500L, fireRate); 
 		}
@@ -226,9 +268,9 @@ public class Player extends GameObject {
 			//makes a new bullet every 'fireRate' seconds
 			timer.scheduleAtFixedRate(new TimerTask() {
 				  public void run() {				  
-						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, handler, player, c, -.5F));
-					    c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, handler, player, c, 0));
-						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, handler, player, c, .5F));
+						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, game, handler, player, c, -.5F));
+					    c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, game, handler, player, c, 0));
+						c.addBullet(new Bullet((int)player.x + 4, (int)player.y + 3, ID.Bullet, game, handler, player, c, .5F));
 				  }
 				}, 500L, fireRate); 
 		}
@@ -238,7 +280,7 @@ public class Player extends GameObject {
 	
 	public void deployBomb(){
 		Player player = this;
-		Bomb deployedBomb = new Bomb((int)player.x, (int) player.y, ID.Bomb, handler, bombLevel);
+		Bomb deployedBomb = new Bomb((int)player.x, (int) player.y, ID.Bomb, game, handler, bombLevel);
 		handler.addObject(deployedBomb);
 		deployedBomb.setBombDeployed(true);
 		--HUD.bombCount;

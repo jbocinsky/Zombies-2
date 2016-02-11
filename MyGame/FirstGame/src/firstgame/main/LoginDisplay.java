@@ -100,7 +100,8 @@ public class LoginDisplay extends JFrame{
 						int healthLevel = DBMan.getHealthLevel(getUserName, getPassWord);
 						int fireRateLevel = DBMan.getFireRateLevel(getUserName, getPassWord);
 						int bombRadiusLevel = DBMan.getBombRadiusLevel(getUserName, getPassWord);
-						Game myGame = new Game(userName, passWord, speedLevel, healthLevel, fireRateLevel, bombRadiusLevel);
+						int money = DBMan.getMoney(getUserName, getPassWord);
+						Game myGame = new Game(userName, passWord, speedLevel, healthLevel, fireRateLevel, bombRadiusLevel, money);
 					}
 					else{
 						message = "You have not entered a valid user name and password. Please try again.";
@@ -124,7 +125,8 @@ public class LoginDisplay extends JFrame{
 						int healthLevel = DBMan.getHealthLevel(getUserName, getPassWord);
 						int fireRateLevel = DBMan.getFireRateLevel(getUserName, getPassWord);
 						int bombRadiusLevel = DBMan.getBombRadiusLevel(getUserName, getPassWord);
-						Game myGame = new Game(userName, passWord, speedLevel, healthLevel, fireRateLevel, bombRadiusLevel);
+						int money = DBMan.getMoney(getUserName, getPassWord);
+						Game myGame = new Game(userName, passWord, speedLevel, healthLevel, fireRateLevel, bombRadiusLevel, money);
 					}
 					else{
 						message = "You have not entered a valid user name and password. Please try again.";

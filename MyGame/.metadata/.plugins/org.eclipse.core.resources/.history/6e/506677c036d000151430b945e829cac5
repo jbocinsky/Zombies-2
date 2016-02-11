@@ -1,0 +1,87 @@
+package firstgame.main;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
+public class Bullet extends GameObject{
+	
+	private Player player;
+	private Handler handler;
+	private BulletController c;
+	
+	public Bullet(int x, int y, ID id, Game game, Handler handler, Player player, BulletController c, float velY) {
+		super(x, y, id);
+		this.handler = handler;
+		this.player = player;
+		this.c = c;
+		boolean L = this.player.getL();
+
+		// sets direction for bullet
+		if(L == false) velX = 10; //this.player.getVelX() + 10;
+		else velX = -10; //this.player.getVelX() - 10;
+		
+		this.velY = velY;
+	}
+	
+	public void tick() {
+		x += velX;
+		y += velY;
+		
+		
+		//if(x <= 10 || x >= Game.WIDTH - (2*(10))) velX *= -1; // bullets bounce off walls
+		
+		//removes bullet if it hits the border
+		if(x <= 0 || x >= Game.WIDTH)  c.removeBullet(this); //10 is the size of the enemy specified in render function. Handles object going outside right and left edge
+	
+		
+		collision();
+	}
+	
+	private void collision(){
+		for(int i = 0; i < handler.object.size(); i++){
+			
+			GameObject tempObject = handler.object.get(i);
+			
+			if(tempObject.getId() == ID.BasicEnemy || tempObject.getId() == ID.FastEnemy || tempObject.getId() == ID.SmartEnemy || tempObject.getId() == ID.BlinkingEnemy){ // tempobject is a BasicEnemy, FastEnemy, SmartEnemy, or BlinkingEnemy
+				if(this.getBounds().intersects(tempObject.getBounds())){ // if collision occurs
+					c.removeBullet(this);
+					handler.removeObject(tempObject);
+					game
+				}
+			}
+			// case when you shoot the enemy boss
+			if(tempObject.getId() == ID.EnemyBoss){
+				if(this.getBounds().intersects(tempObject.getBounds())){
+					HUD.ENEMYHEALTH -= 2; //requires 50 hits for boss to die
+					c.removeBullet(this);
+					//if boss's health = 0, get rid of the boss and the smart enemy if there is one.
+					if((int)HUD.ENEMYHEALTH == 0){
+						for(int j = 0; j < handler.object.size(); j++){
+							GameObject smartEnemy = handler.object.get(j);
+							
+							if(smartEnemy.getId() == ID.SmartEnemy){
+								handler.removeObject(smartEnemy); //gets rid of smart enemies when boss dies
+								j--;
+							}
+						}
+						handler.removeObject(tempObject); //gets rid of boss
+					}
+				}	
+			}
+		}
+	}
+
+	public void render(Graphics g) {
+		g.setColor(Color.gray);
+		g.fillRect((int)x, (int)y, 5, 5);
+		
+	}
+
+
+	public Rectangle getBounds() {
+		return new Rectangle((int)x, (int)y, 5, 5);
+	}
+	
+
+}

@@ -4,3 +4,5 @@
 1454828053459	Encapsulate field 'healthLevel'
 1454828057473	Encapsulate field 'fireRateLevel'
 1454828061540	Encapsulate field 'bombRadiusLevel'
+1454831830354	Delete element
+1454870537666	Rename type 'PauseMenu'

@@ -1,0 +1,60 @@
+package firstgame.main;
+
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.io.IOException;
+
+import javax.swing.JOptionPane;
+
+import javax.swing.JFrame;
+
+public class Window extends Canvas {
+
+	private static final long serialVersionUID = 1L;
+	private boolean visible = true;
+
+	public Window(int width, int height, String title, Game game){
+		JFrame frame = new JFrame(title);
+		
+		frame.setPreferredSize(new Dimension(width,height));
+		frame.setMaximumSize(new Dimension(width,height));
+		frame.setMinimumSize(new Dimension(width,height));
+	
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.add(game);
+		frame.setVisible(true);
+		game.start();
+		
+		
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	//creates an option for the user to save or not
+		    	int Option = JOptionPane.showConfirmDialog(frame, "Would you like to save the game before closing?", "Save Game?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		    	
+		        if(Option == JOptionPane.YES_OPTION){
+		        	DataBaseManager DBMan = new DataBaseManager();
+		        	try {
+						DBMan.saveGame(game.getUserName(), game.getPassWord(), game.getSpeedLevel(), game.getHealthLevel(), game.getFireRateLevel(), game.getBombLevel(), game.getMoney());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+		        	System.exit(0);
+		        }
+				else if(Option == JOptionPane.NO_OPTION){
+			        System.exit(0);
+		        }	
+		    }
+		});
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+}

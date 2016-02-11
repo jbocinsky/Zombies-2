@@ -44,7 +44,7 @@ public class Spawn {
 					handler.addObject(new HealthRegenerator(generateEnemyX(),generateEnemyY(), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 				}
 				if(hud.getLevel()%5 == 0){
-					handler.addObject(new Bomb(generateEnemyX(),generateEnemyY(), ID.Bomb, handler, bombLevel));
+					handler.addObject(new Bomb(generateEnemyX(),generateEnemyY(), ID.Bomb, game, handler, bombLevel));
 				}
 				if(hud.getLevel() == 2){
 					handler.addObject(new BasicEnemy(generateEnemyX(),generateEnemyY(), ID.BasicEnemy, handler));
@@ -114,7 +114,7 @@ public class Spawn {
 					handler.addObject(new HealthRegenerator(generateEnemyX(),generateEnemyY(), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 				}
 				if(hud.getLevel()%8 == 0){
-					handler.addObject(new Bomb(generateEnemyX(),generateEnemyY(), ID.Bomb, handler, bombLevel));
+					handler.addObject(new Bomb(generateEnemyX(),generateEnemyY(), ID.Bomb, game, handler, bombLevel));
 				}
 				if(hud.getLevel() == 2){
 					handler.addObject(new BasicEnemy(generateEnemyX(),generateEnemyY(), ID.BasicEnemy, handler));
@@ -202,7 +202,7 @@ public class Spawn {
 					handler.addObject(new HealthRegenerator(generateEnemyX(),generateEnemyY(), ID.HealthRegenerator, handler)); // makes an enemy at the start of the game
 				}
 				if(hud.getLevel()%10 == 0){
-					handler.addObject(new Bomb(generateEnemyX(),generateEnemyY(), ID.Bomb, handler, bombLevel));
+					handler.addObject(new Bomb(generateEnemyX(),generateEnemyY(), ID.Bomb, game, handler, bombLevel));
 				}
 				if(hud.getLevel() == 2){
 					handler.addObject(new BasicEnemy(generateEnemyX(),generateEnemyY(), ID.BasicEnemy, handler));
