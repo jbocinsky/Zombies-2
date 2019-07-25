@@ -9,9 +9,11 @@ You must hava java installed to play game
 ### Starting game
 
 Navigate to the src and run the following in a commamnd prompt or terminal to compile the game:
+
 `javac firstgame/main/Game.java`
 
 Start the game by running:
+
 `java firstgame.main.Game`
 
-Good luck!
+##### Good luck!
